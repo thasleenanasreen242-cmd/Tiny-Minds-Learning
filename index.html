@@ -373,7 +373,7 @@ lessons.numbers100={label:'Numbers 1–100',items:Array.from({length:100},(_,i)=
 function updateStars(){$('progress').textContent='⭐ '+stars+' stars collected';localStorage.setItem('tml-stars',String(stars))}
 function speak(t){if(sound&&'speechSynthesis'in window){speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(t);u.rate=.58;u.pitch=1.08;u.volume=1;const voices=speechSynthesis.getVoices();const english=voices.filter(v=>/^en(-|_)/i.test(v.lang));const femaleClear=english.find(v=>/samantha|aria|jenny|susan|zira|karen|moira|tessa|victoria|ava|allison|google us english|microsoft.*(jenny|aria|susan|zira|ava|jane)/i.test(v.name))||english.find(v=>/female/i.test(v.name))||english.find(v=>/natural|neural/i.test(v.name))||english[0];if(femaleClear)u.voice=femaleClear;u.onend=()=>{};speechSynthesis.speak(u)}}
 function shuffle(a){return a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(v=>v[1])}
-function openGame(id){current=id;round=0;$('home').style.display='none';$('play').classList.add('active');$('feedback').textContent='';$('nextBtn').hidden=true;if(id==='alphabetOnly')renderAlphabetGrid();else if(lessons[id])renderTeaching();else if(id==='memory')renderMemory();else renderQuestion();window.scrollTo({top:0,behavior:'smooth'})}
+function openGame(id){current=id;round=0;$('home').style.display='none';$('play').classList.add('active');$('feedback').textContent='';$('nextBtn').hidden=true;if(id==='alphabetOnly')renderAlphabetGrid();else if(id==='colorTeaching')renderColourGrid();else if(lessons[id])renderTeaching();else if(id==='memory')renderMemory();else renderQuestion();window.scrollTo({top:0,behavior:'smooth'})}
 function renderAlphabetGrid(){
  const area=$('playArea');
  $('gameLabel').textContent='A to Z — Letters Only · 26 letters';
@@ -387,6 +387,31 @@ function renderAlphabetGrid(){
   const tile=document.createElement('button');tile.type='button';tile.className='alphabet-tile';tile.textContent=letter;tile.setAttribute('aria-label','Say letter '+letter);
   tile.onclick=()=>{grid.querySelectorAll('.alphabet-tile').forEach(el=>el.classList.remove('selected'));tile.classList.add('selected');speak(letter);$('feedback').textContent='💜 Letter '+letter;};
   grid.appendChild(tile);
+ });
+ area.appendChild(grid);
+}
+function renderColourGrid(){
+ const lesson=lessons.colorTeaching,area=$('playArea');
+ $('gameLabel').textContent='Learn Colours · '+lesson.items.length+' colours';
+ $('question').textContent='Touch a Colour!';
+ $('prompt').textContent='Tap any colour to hear its name.';
+ $('feedback').textContent='🌈 Choose a bright colour to begin!';
+ $('nextBtn').hidden=true;
+ area.className='colour-grid-area';area.innerHTML='';
+ const grid=document.createElement('div');
+ grid.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,125px),1fr));gap:14px;width:100%;max-width:760px;margin:18px auto 28px';
+ lesson.items.forEach(([name,hex])=>{
+  const tile=document.createElement('button');tile.type='button';tile.className='colour-touch-tile';
+  tile.style.cssText='min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:14px 8px;border:3px solid #fff;border-radius:24px;background:#fff;box-shadow:0 8px 22px #54406d12;cursor:pointer;transition:transform .15s,box-shadow .15s';
+  const swatch=document.createElement('span');swatch.style.cssText='display:block;width:clamp(68px,12vw,94px);height:clamp(68px,12vw,94px);border-radius:50%;background:'+hex+';border:2px solid '+(['White','#ffffff'].includes(name)?'#d8d3df':'#ffffff')+';box-shadow:0 4px 12px #342d4520';
+  const label=document.createElement('span');label.textContent=name;label.style.cssText='font-size:1.15rem;font-weight:900;color:#342d45';
+  tile.setAttribute('aria-label','Touch to hear '+name);tile.append(swatch,label);
+  tile.onclick=()=>{
+   grid.querySelectorAll('button').forEach(el=>{el.style.transform='scale(1)';el.style.boxShadow='0 8px 22px #54406d12';el.setAttribute('aria-pressed','false')});
+   tile.style.transform='scale(1.04)';tile.style.boxShadow='0 10px 25px #54406d24';tile.setAttribute('aria-pressed','true');
+   $('feedback').textContent='🎨 '+name;speak(name);
+  };
+  tile.setAttribute('aria-pressed','false');grid.appendChild(tile);
  });
  area.appendChild(grid);
 }
