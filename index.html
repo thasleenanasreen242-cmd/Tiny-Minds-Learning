@@ -190,41 +190,44 @@ button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 @media(hover:none){.game:hover,#playArea button:hover{transform:none;box-shadow:inherit}}
 
 
-/* Speaking Cat activity and lesson companion */
-.speaking-cat-area{max-width:640px;width:100%;margin:12px auto}
-.speaking-cat-card{padding:clamp(18px,4vw,32px);border:1px solid #f3dcec;border-radius:28px;background:linear-gradient(145deg,#fff7fb,#f1efff 60%,#effaff);box-shadow:0 16px 34px #59437d15;text-align:center}
-.cat-speech-bubble{display:inline-block;max-width:100%;padding:12px 20px;border-radius:22px;background:#fff;color:#6c4a8d;font-size:clamp(1rem,3vw,1.25rem);font-weight:800;box-shadow:0 5px 15px #59437d12;margin-bottom:10px}
-.speaking-kitty{display:block;width:min(100%,220px);aspect-ratio:1;margin:4px auto 8px;border:0;border-radius:50%;background:radial-gradient(circle at 35% 25%,#fff 0,#ffeaf5 58%,#e8e1ff 100%);font-size:clamp(6rem,22vw,9rem);cursor:pointer;transition:transform .18s;box-shadow:inset 0 0 0 7px #ffffff9c,0 12px 24px #59437d13}
-.speaking-kitty:hover{transform:scale(1.035)}
-.cat-caption{color:#746781;font-size:1rem;line-height:1.5;margin:12px 0 18px}
-.cat-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;max-width:440px;margin:0 auto}
-.cat-action{border:1px solid #eee2f7;border-radius:15px;padding:12px 10px;background:#fff;color:#5d4c77;font-weight:800;min-height:48px;cursor:pointer}
-.cat-action:hover{background:#fff0f7;transform:translateY(-1px)}
-.lesson-cat-mascot{display:flex;align-items:center;justify-content:center;gap:10px;width:min(100%,470px);margin:12px auto 4px;padding:10px 14px;border-radius:18px;background:linear-gradient(100deg,#fff4fa,#f2efff);border:1px solid #f0e4f6}
-.lesson-cat-face{flex:0 0 52px;width:52px;height:52px;border:0;border-radius:50%;background:#fff;font-size:2rem;cursor:pointer;box-shadow:0 4px 12px #59437d12}
-.lesson-cat-speech{font-size:.9rem;line-height:1.4;color:#69557f;text-align:left}
-@media(max-width:520px){.speaking-cat-card{padding:16px;border-radius:22px}.speaking-kitty{width:min(100%,180px)}.cat-actions{gap:8px}.cat-action{padding:11px 8px;font-size:.9rem}.lesson-cat-mascot{padding:9px 10px}.lesson-cat-face{width:46px;height:46px;flex-basis:46px}}
 
-
-/* Make Kitty easy to discover from the home screen */
-.home-cat-banner{display:flex;align-items:center;gap:16px;margin:0 auto 28px;padding:18px 20px;max-width:1050px;border:1px solid #f1d9ea;border-radius:24px;background:linear-gradient(105deg,#fff0f7,#f0edff 65%,#eefaff);box-shadow:0 10px 24px #59437d10}
-.home-cat-icon{display:flex;align-items:center;justify-content:center;flex:0 0 76px;width:76px;height:76px;border-radius:50%;background:#fff;font-size:3.3rem;box-shadow:0 5px 16px #59437d12}
-.home-cat-copy{display:flex;flex:1;flex-direction:column;gap:5px;color:#665279;line-height:1.45}
-.home-cat-copy strong{font-size:1.08rem;color:#5e4677}
-.home-cat-copy span{font-size:.92rem}
-.home-cat-buttons{display:flex;gap:8px;flex-wrap:wrap}
-.home-cat-buttons button{border:1px solid #e9d8f2;background:#fff;border-radius:13px;padding:11px 13px;color:#604c7a;font-weight:800;cursor:pointer}
-.home-cat-buttons button:hover{background:#fff4fa}
-@media(max-width:650px){.home-cat-banner{align-items:flex-start;gap:11px;padding:14px;margin-bottom:22px;flex-wrap:wrap}.home-cat-icon{width:58px;height:58px;flex-basis:58px;font-size:2.5rem}.home-cat-copy{min-width:calc(100% - 80px)}.home-cat-buttons{width:100%;padding-left:0}.home-cat-buttons button{flex:1}}
+/* Floating voice-agent interface, rather than a separate cat activity */
+.voice-agent{position:fixed;right:22px;bottom:20px;z-index:9999;font-family:inherit}
+.voice-agent-launcher{display:flex;align-items:center;gap:10px;padding:10px 17px 10px 10px;border:0;border-radius:999px;background:linear-gradient(110deg,#7657c8,#9b70d6);color:#fff;font:800 15px/1.1 inherit;box-shadow:0 8px 28px #4f327d45;cursor:pointer;transition:transform .18s,box-shadow .18s}
+.voice-agent-launcher:hover{transform:translateY(-2px);box-shadow:0 12px 32px #4f327d55}
+.voice-agent-orb{display:grid;place-items:center;width:43px;height:43px;border-radius:50%;background:#ffffff25;font-size:1.45rem;border:1px solid #ffffff55}
+.voice-agent-live-dot{width:8px;height:8px;border-radius:50%;background:#9bf3c0;box-shadow:0 0 0 4px #ffffff20}
+.voice-agent-panel{position:absolute;right:0;bottom:70px;width:min(370px,calc(100vw - 28px));height:min(520px,calc(100dvh - 115px));min-height:330px;display:flex;flex-direction:column;overflow:hidden;border:1px solid #e7def6;border-radius:24px;background:#fff;box-shadow:0 18px 60px #32214a35}
+.voice-agent-panel[hidden]{display:none}
+.voice-agent-header{display:flex;align-items:center;gap:11px;padding:15px;background:linear-gradient(110deg,#f5efff,#fff0f7);border-bottom:1px solid #eee6f6}
+.voice-agent-avatar{display:grid;place-items:center;width:43px;height:43px;border-radius:50%;background:#fff;font-size:1.4rem}
+.voice-agent-title{display:flex;flex:1;flex-direction:column;gap:4px;color:#4c3b68}
+.voice-agent-title strong{font-size:.98rem}.voice-agent-title span{font-size:.78rem;color:#7d7190}
+.voice-agent-close{border:0;background:#ffffffb8;color:#6b5b7e;border-radius:50%;width:34px;height:34px;font-size:1.5rem;cursor:pointer}
+.voice-agent-messages{display:flex;flex:1;flex-direction:column;gap:10px;padding:14px;overflow:auto;background:linear-gradient(180deg,#fff,#fdfaff)}
+.agent-message{max-width:88%;padding:11px 13px;border-radius:16px;font-size:.92rem;line-height:1.45;overflow-wrap:anywhere}
+.agent-bot{align-self:flex-start;background:#f1ebff;color:#4e3c68;border-bottom-left-radius:5px}
+.agent-user{align-self:flex-end;background:#e6f7ef;color:#285944;border-bottom-right-radius:5px}
+.voice-agent-quick{display:flex;gap:7px;flex-wrap:wrap;padding:8px 12px;border-top:1px solid #f1ebf7}
+.voice-agent-quick button{border:1px solid #e7def6;background:#fff;border-radius:999px;padding:7px 10px;color:#685481;font-size:.78rem;font-weight:800;cursor:pointer}
+.voice-agent-form{display:flex;align-items:center;gap:8px;padding:10px 12px;border-top:1px solid #eee6f6}
+.voice-agent-form input{min-width:0;flex:1;border:1px solid #e4dced;border-radius:999px;padding:12px 13px;font:inherit;font-size:.9rem;outline:none}
+.voice-agent-form input:focus{border-color:#9b7bd2;box-shadow:0 0 0 3px #9b7bd225}
+.voice-agent-mic,.voice-agent-send{flex:0 0 40px;width:40px;height:40px;border:0;border-radius:50%;background:#eee6ff;color:#60468b;font-size:1.15rem;cursor:pointer}
+.voice-agent-mic.listening{background:#ffdfeb;box-shadow:0 0 0 5px #ffdfeb80;animation:agentPulse 1.1s infinite}
+.voice-agent-send{background:#7858c7;color:#fff}
+.voice-agent-hint{margin:0;padding:0 12px 10px;color:#8c8299;font-size:.7rem}
+@keyframes agentPulse{50%{box-shadow:0 0 0 9px #ffdfeb40}}
+@media(max-width:520px){.voice-agent{right:12px;bottom:12px}.voice-agent-panel{bottom:64px;right:-2px;width:calc(100vw - 24px);height:min(500px,calc(100dvh - 95px));border-radius:21px}.voice-agent-launcher{padding:8px 13px 8px 8px;font-size:14px}.voice-agent-orb{width:39px;height:39px}}
 
 </style></head>
 <body><div class="wrap">
 <header class="top"><button class="pill home-back" id="homeBackBtn" type="button" aria-label="Go back to the previous page">← Back</button><div class="brand"><div class="logo" aria-hidden="true">🌱</div><span>Tiny Minds Learning</span></div><button class="pill" id="soundToggle" aria-pressed="false">🔊 Slow Voice: Off</button></header>
 <main id="home"><section class="hero"><div><div class="eyebrow">Play • Learn • Grow</div><h1>Little learners,<br>big discoveries!</h1><p>A happy little world of learning. Explore animals, colors, shapes, numbers, and more—one playful step at a time.</p><button class="primary" id="startBtn">Let's Play! ✨</button></div><div class="hero-art" aria-hidden="true">🦊🌈🐻</div></section>
-<section class="home-cat-banner" aria-label="Meet the speaking cat"><div class="home-cat-icon" aria-hidden="true">🐱</div><div class="home-cat-copy"><strong>Meet Kitty, your speaking friend!</strong><span>Tap Kitty to hear a greeting, or visit the Speaking Cat game.</span></div><div class="home-cat-buttons"><button type="button" id="homeCatHello">👋 Say hello</button><button type="button" id="homeCatMeow">🐾 Meow</button></div></section>
+
 <div class="section-head"><div><h2>What shall we explore?</h2><p>Choose a game to begin your adventure.</p></div><div class="progress" id="progress">⭐ 0 stars collected</div></div>
 <section class="games" aria-label="Toddler learning games">
-<button class="game" data-game="speakingCat"><div class="emoji" style="background:#fce7f3">🐱</div><h3>Speaking Cat</h3><p>Tap the kitty to hear friendly words and playful meows.</p><small>Talk with the cat →</small></button>
+
 <button class="game" data-game="alphabet"><div class="emoji" style="background:var(--pink)">🔤</div><h3>ABC Adventure</h3><p>Learn letters A to Z with friendly pictures and words.</p><small>Learn the alphabet →</small></button>
 <button class="game" data-game="alphabetOnly"><div class="emoji" style="background:#e8e1ff">🔠</div><h3>A to Z — Letters Only</h3><p>See all 26 letters together. Tap any letter to hear its name—no pictures or words.</p><small>Explore A to Z →</small></button>
 <button class="game" data-game="numbers100"><div class="emoji" style="background:var(--mint)">💯</div><h3>Numbers 1–100</h3><p>Count from one all the way to one hundred.</p><small>Learn numbers →</small></button>
@@ -240,6 +243,18 @@ button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 <button class="game" data-game="helpers"><div class="emoji" style="background:var(--pink)">🧑‍🚒</div><h3>Everyday Helpers</h3><p>Meet the people who help us every day.</p><small>Meet helpers →</small></button>
 </section><section class="feature"><div class="big" aria-hidden="true">💛</div><div><h2>Little steps make big progress</h2><p>These activities are for playful practice, not tests. Join your child, celebrate curiosity, and take breaks whenever needed.</p></div></section></main>
 <section class="screen" id="play" aria-live="polite"><button class="back" id="backBtn">← Back to games</button><div class="eyebrow" id="gameLabel">Let's learn</div><h2 id="question">Ready to play?</h2><p class="prompt" id="prompt">Choose the right answer.</p><div id="playArea"></div><div class="feedback" id="feedback" role="status"></div><button class="primary next" id="nextBtn" hidden>Next question →</button><p class="notice">Grown-ups: play together and follow your child's pace. This game does not measure IQ or diagnose development.</p></section>
+
+<!-- Floating voice learning assistant: stays out of the learning-game grid -->
+<div class="voice-agent" id="voiceAgent">
+ <button class="voice-agent-launcher" id="voiceAgentOpen" type="button" aria-label="Open speaking learning assistant" aria-expanded="false"><span class="voice-agent-orb">🎙️</span><span>Talk & Learn</span><span class="voice-agent-live-dot"></span></button>
+ <section class="voice-agent-panel" id="voiceAgentPanel" aria-label="Speaking learning assistant" hidden>
+  <header class="voice-agent-header"><div class="voice-agent-avatar">✨</div><div class="voice-agent-title"><strong>Little Learning Buddy</strong><span id="voiceAgentStatus">Ready to listen</span></div><button id="voiceAgentClose" class="voice-agent-close" type="button" aria-label="Close assistant">×</button></header>
+  <div class="voice-agent-messages" id="voiceAgentMessages" aria-live="polite"><div class="agent-message agent-bot">Hi, little learner! 🌈 Tap the microphone and ask me about letters, numbers, colours, animals, or shapes.</div></div>
+  <div class="voice-agent-quick"><button type="button" data-agent-prompt="Teach me a letter">🔤 Letters</button><button type="button" data-agent-prompt="Count with me">🔢 Count</button><button type="button" data-agent-prompt="Tell me an animal">🐼 Animals</button></div>
+  <form class="voice-agent-form" id="voiceAgentForm"><button class="voice-agent-mic" id="voiceAgentMic" type="button" aria-label="Speak to the learning assistant">🎤</button><input id="voiceAgentInput" type="text" autocomplete="off" placeholder="Type or tap the mic…" aria-label="Message the learning assistant"/><button class="voice-agent-send" type="submit" aria-label="Send message">➤</button></form>
+  <p class="voice-agent-hint">Voice input depends on your browser. Typing works too.</p>
+ </section>
+</div>
 <footer class="footer"><strong>Tiny Minds Learning</strong><br>Little Learners, Big Discoveries!<br>Made for curious little minds and the grown-ups who cheer them on.</footer></div>
 <script>
 (()=>{'use strict';const $=id=>document.getElementById(id);let sound=false,stars=Number(localStorage.getItem('tml-stars')||0),round=0,current='',answered=false,matched=0,memFirst=null,memLock=false,memoryRound=0;
@@ -358,23 +373,7 @@ lessons.numbers100={label:'Numbers 1–100',items:Array.from({length:100},(_,i)=
 function updateStars(){$('progress').textContent='⭐ '+stars+' stars collected';localStorage.setItem('tml-stars',String(stars))}
 function speak(t){if(sound&&'speechSynthesis'in window){speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(t);u.rate=.58;u.pitch=1.08;u.volume=1;const voices=speechSynthesis.getVoices();const english=voices.filter(v=>/^en(-|_)/i.test(v.lang));const femaleClear=english.find(v=>/samantha|aria|jenny|susan|zira|karen|moira|tessa|victoria|ava|allison|google us english|microsoft.*(jenny|aria|susan|zira|ava|jane)/i.test(v.name))||english.find(v=>/female/i.test(v.name))||english.find(v=>/natural|neural/i.test(v.name))||english[0];if(femaleClear)u.voice=femaleClear;u.onend=()=>{};speechSynthesis.speak(u)}}
 function shuffle(a){return a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(v=>v[1])}
-function openGame(id){current=id;round=0;$('home').style.display='none';$('play').classList.add('active');$('feedback').textContent='';$('nextBtn').hidden=true;if(id==='alphabetOnly')renderAlphabetGrid();else if(id==='speakingCat')renderSpeakingCat();else if(lessons[id])renderTeaching();else if(id==='memory')renderMemory();else renderQuestion();window.scrollTo({top:0,behavior:'smooth'})}
-function ensureCatVoice(){if(!sound){sound=true;$('soundToggle').textContent='🔊 Slow Voice: On';$('soundToggle').setAttribute('aria-pressed','true')}}
-function catSpeak(text){ensureCatVoice();speak(text)}
-function renderSpeakingCat(){
- const area=$('playArea');area.className='speaking-cat-area';area.innerHTML='';
- $('gameLabel').textContent='Speaking Cat · Talk and listen';
- $('question').textContent='Hello, little friend!';
- $('prompt').textContent='Tap the kitty or choose a button to hear the cat speak.';
- $('feedback').textContent='🐾 Let’s talk with Kitty!';
- const card=document.createElement('div');card.className='speaking-cat-card';
- const bubble=document.createElement('div');bubble.className='cat-speech-bubble';bubble.textContent='Meow! Hello there!';
- const kitty=document.createElement('button');kitty.type='button';kitty.className='speaking-kitty';kitty.textContent='🐱';kitty.setAttribute('aria-label','Tap the cat to hear a meow');kitty.onclick=()=>{bubble.textContent='Meow, meow!';catSpeak('Meow meow!')};
- const caption=document.createElement('p');caption.className='cat-caption';caption.textContent='I am Kitty. Let’s learn together!';
- const actions=document.createElement('div');actions.className='cat-actions';
- [['👋 Say hello','Hello, little learner!'],['🐾 Meow','Meow meow!'],['💗 Meet Kitty','I am a little cat. I say meow!'],['⭐ Cheer up','You are doing a great job!']].forEach(([label,phrase])=>{const btn=document.createElement('button');btn.type='button';btn.className='cat-action';btn.textContent=label;btn.onclick=()=>{bubble.textContent=phrase;catSpeak(phrase)};actions.appendChild(btn)});
- card.append(bubble,kitty,caption,actions);area.appendChild(card);
-}
+function openGame(id){current=id;round=0;$('home').style.display='none';$('play').classList.add('active');$('feedback').textContent='';$('nextBtn').hidden=true;if(id==='alphabetOnly')renderAlphabetGrid();else if(lessons[id])renderTeaching();else if(id==='memory')renderMemory();else renderQuestion();window.scrollTo({top:0,behavior:'smooth'})}
 function renderAlphabetGrid(){
  const area=$('playArea');
  $('gameLabel').textContent='A to Z — Letters Only · 26 letters';
@@ -455,15 +454,35 @@ function renderTeaching(){
  const say=document.createElement('button');say.className='back';say.textContent='🔊 Say it';say.onclick=()=>speak(current==='colorTeaching'?item[0]:current==='alphabet'?(item[0]+'. '+item[2]):current==='numbers100'?item[2]:item[1]+'. '+item[2]);controls.appendChild(say);
  const next=document.createElement('button');next.className='primary';next.textContent=round===lesson.items.length-1?'Start again ↻':'Next →';next.onclick=()=>{round=round>=lesson.items.length-1?0:round+1;renderTeaching()};controls.appendChild(next);
  area.appendChild(controls);
- const mascot=document.createElement('div');mascot.className='lesson-cat-mascot';
- const catFace=document.createElement('button');catFace.type='button';catFace.className='lesson-cat-face';catFace.textContent='🐱';catFace.setAttribute('aria-label','Kitty says the current lesson item');catFace.onclick=()=>{const phrase=current==='colorTeaching'?item[0]:current==='alphabet'?item[0]+' as in '+item[2]:current==='numbers100'?item[2]:item[1];catSpeech.textContent='“'+phrase+'!”';catSpeak(phrase)};
- const catSpeech=document.createElement('span');catSpeech.className='lesson-cat-speech';catSpeech.textContent='Hi! Tap me and I’ll say it with you.';
- mascot.append(catFace,catSpeech);area.appendChild(mascot);
  $('feedback').textContent='🌱 Learn at your own pace';$('nextBtn').hidden=true;speak(current==='colorTeaching'?item[0]:current==='alphabet'?(item[0]+'. '+item[2]):current==='numbers100'?item[2]:item[1]);
 }
 function renderQuestion(){const g=bank[current],item=g.items[round%g.items.length];$('nextBtn').onclick=()=>{round++;if(round>=100)round=0;renderQuestion()};answered=false;$('gameLabel').textContent=g.label;$('question').textContent=item.q;$('prompt').textContent='Tap your answer!';$('feedback').textContent='';$('nextBtn').hidden=true;$('nextBtn').textContent='Next question →';const area=$('playArea');area.className='choices';area.innerHTML='';const animalPhotos={'dog':'photo-1552053831-71594a27632d','cat':'photo-1514888286974-6c03e2ca1dba','cow':'photo-1516467508483-a7212febe31a','duck':'photo-1555852095-64e7428df0fa','sheep':'photo-1484557985045-edf25e08da73','elephant':'photo-1564760055775-d63b17a55c44','rabbit':'photo-1585110396000-c9ffd4e4b308','frog':'photo-1535591273668-578e31182c4f','horse':'photo-1534307679234-acf5f7fce4e8','hen':'photo-1548550023-2bdb3c5beed7','lion':'photo-1546182990-dffeafbe841d','tiger':'photo-1561731216-c3a4d99437d5','monkey':'photo-1540573133985-87b6da6d54a9','panda':'photo-1564349683136-77e08dba1ef7','bear':'photo-1568162603664-fcd658421851','giraffe':'photo-1547721064-da6cfb341d50','zebra':'photo-1501706362039-c6e13d8e15e7','turtle':'photo-1437622368342-7a3d73a34c8f','dolphin':'photo-1607153333879-c174d265f1d2','penguin':'photo-1551986782-d0169b3f8fa7','butterfly':'photo-1559253664-ca249d4608c6','bee':'photo-1587049352851-8d4e89133924','owl':'photo-1549608276-5786777e6587','fox':'photo-1474511320723-9a56873867b5','octopus':'photo-1545670723-196ed0954986','camel':'photo-1512632578888-169bbbc64f33','hippo':'photo-1551085254-e96b210db58a','rhino':'photo-1535338454770-8be927b5a00b','peacock':'photo-1519608487953-e999c86e7455','parrot':'photo-1552728089-57bdde30beb3'};shuffle(item.a.map((a,i)=>({a,correct:i===item.correct}))).forEach(o=>{const b=document.createElement('button');b.className='choice';const label=String(o.a[1]);if(current==='animals'){const img=document.createElement('img');img.alt=label;img.loading='lazy';img.style.cssText='width:100%;height:100px;object-fit:cover;object-position:center;border-radius:12px;margin-bottom:8px;background:#f7f2ff';img.onerror=()=>{img.replaceWith(Object.assign(document.createElement('div'),{textContent:o.a[0]}))};b.appendChild(img);getAnimalPhoto(label).then(src=>{if(src&&img.isConnected)img.src=src;else if(img.isConnected)img.replaceWith(Object.assign(document.createElement('div'),{textContent:o.a[0]}))})}else{const icon=document.createElement('div');icon.textContent=o.a[0];b.appendChild(icon)}const caption=document.createElement('span');caption.textContent=label;b.appendChild(caption);b.setAttribute('aria-label',label);b.onclick=()=>{if(answered)return;if(o.correct){answered=true;b.classList.add('correct');$('feedback').textContent='🌟 Wonderful! You did it!';stars++;updateStars();celebrate();speak('Wonderful! Great job!');Array.from(area.children).forEach(x=>x.disabled=true);$('nextBtn').hidden=false}else{b.classList.add('wrong');$('feedback').textContent='💛 Try again, little learner!';speak('Try again');setTimeout(()=>b.classList.remove('wrong'),500)}};area.appendChild(b)});speak(item.q)}
 function renderMemory(){current='memory';$('nextBtn').onclick=()=>{if(memoryRound>=100)memoryRound=0;renderMemory()};matched=0;memFirst=null;memLock=false;memoryRound=Math.min(memoryRound+1,100);$('gameLabel').textContent='Memory Garden · Challenge '+memoryRound+' of 100';$('question').textContent='Find the matching friends!';$('prompt').textContent='Tap two cards to find a pair. Every round is a new challenge.';$('feedback').textContent='';$('nextBtn').hidden=true;$('nextBtn').textContent='Play again ↻';const vals=shuffle(['🐻','🐸','🦊','🐼','🐸','🐻','🦊','🐼','🐰','🐰','🐱','🐱']),area=$('playArea');area.className='memory-grid';area.innerHTML='';vals.forEach((v,i)=>{const b=document.createElement('button');b.className='memory-card';b.textContent='❔';b.setAttribute('aria-label','Hidden picture');b.dataset.value=v;b.onclick=()=>{if(memLock||b.classList.contains('revealed')||b.disabled)return;b.textContent=v;b.classList.add('revealed');b.setAttribute('aria-label',v);if(!memFirst){memFirst=b;return}if(memFirst.dataset.value===v){memFirst.disabled=true;b.disabled=true;matched+=2;stars++;updateStars();celebrate();$('feedback').textContent='✨ A match! Well done!';speak('A match! Well done!');memFirst=null;if(matched===vals.length){$('feedback').textContent=memoryRound===100?'🏆 You completed all 100 memory challenges!':'🎉 You found every friend!';$('nextBtn').hidden=false;$('nextBtn').textContent=memoryRound===100?'Play again from 1 ↻':'Next challenge →'}}else{memLock=true;const first=memFirst;setTimeout(()=>{first.textContent='❔';b.textContent='❔';first.classList.remove('revealed');b.classList.remove('revealed');memFirst=null;memLock=false},850)}};area.appendChild(b)});speak('Find the matching friends')}
 function back(){$('play').classList.remove('active');$('home').style.display='block';window.scrollTo({top:0,behavior:'smooth'})}
-document.querySelectorAll('[data-game]').forEach(b=>b.addEventListener('click',()=>openGame(b.dataset.game)));$('homeCatHello').onclick=()=>catSpeak('Hello, little learner! I am Kitty. Let us learn together!');$('homeCatMeow').onclick=()=>catSpeak('Meow meow!');$('startBtn').onclick=()=>openGame('animals');$('backBtn').onclick=back;$('homeBackBtn').onclick=()=>{if($('play').classList.contains('active')){back()}else if(window.history.length>1){window.history.back()}else{window.scrollTo({top:0,behavior:'smooth'})}};$('nextBtn').onclick=()=>{if(current==='memory'){if(memoryRound>=100)memoryRound=0;renderMemory();return}round++;if(round>=100)round=0;renderQuestion()};$('soundToggle').onclick=()=>{sound=!sound;$('soundToggle').textContent=sound?'🔊 Slow Voice: On':'🔊 Slow Voice: Off';$('soundToggle').setAttribute('aria-pressed',String(sound));if(!sound&&'speechSynthesis'in window)speechSynthesis.cancel();else speak('Hello little learner. Let us learn slowly together.')};updateStars();
+document.querySelectorAll('[data-game]').forEach(b=>b.addEventListener('click',()=>openGame(b.dataset.game)));
+const agentPanel=$('voiceAgentPanel'),agentOpen=$('voiceAgentOpen'),agentInput=$('voiceAgentInput'),agentMessages=$('voiceAgentMessages'),agentStatus=$('voiceAgentStatus'),agentMic=$('voiceAgentMic');
+let agentRecognition=null,agentListening=false;
+function agentAddMessage(text,who){const el=document.createElement('div');el.className='agent-message '+(who==='user'?'agent-user':'agent-bot');el.textContent=text;agentMessages.appendChild(el);agentMessages.scrollTop=agentMessages.scrollHeight}
+function agentSpeak(text){if(!('speechSynthesis'in window))return;window.speechSynthesis.cancel();const utterance=new SpeechSynthesisUtterance(text);utterance.lang='en-IN';utterance.rate=.78;utterance.pitch=1.08;utterance.volume=1;const voices=window.speechSynthesis.getVoices();const preferred=voices.find(v=>/female|zira|samantha|aria|jenny|google uk english female/i.test(v.name))||voices.find(v=>/^en/i.test(v.lang));if(preferred)utterance.voice=preferred;window.speechSynthesis.speak(utterance)}
+function agentReply(raw){const q=raw.toLowerCase().trim();if(!q)return 'Tell me what you would like to learn!';
+ if(/\b(hello|hi|hey|good morning)\b/.test(q))return 'Hello, little learner! I am your Learning Buddy. What shall we explore today?';
+ if(/\b(letter|alphabet|abc)\b/.test(q)){const m=q.match(/\b([a-z])\b/);return m?'The letter '+m[1].toUpperCase()+'. '+({a:'A is for apple.',b:'B is for ball.',c:'C is for cat.',d:'D is for dog.',e:'E is for egg.',f:'F is for fish.',g:'G is for grapes.',h:'H is for house.'}[m[1]]||'Can you find the letter '+m[1].toUpperCase()+' in ABC Adventure?'):'Let us learn a letter! A is for apple. B is for ball. C is for cat. Which letter would you like to learn?' }
+ if(/\b(count|counting|number|numbers)\b/.test(q)){if(/ten|10/.test(q))return 'One, two, three, four, five, six, seven, eight, nine, ten! Great counting!';return 'Let us count together! One, two, three, four, five. Would you like to count to ten?'}
+ if(/\b(colou?r|red|blue|green|yellow|pink|purple|orange)\b/.test(q)){const m=q.match(/\b(red|blue|green|yellow|pink|purple|orange|black|white|brown)\b/);return m?'That is '+m[1]+ '! Can you find '+m[1]+' in the Learn Colours activity?':'Colours are all around us! Red, blue, yellow, and green. Which colour do you like?'}
+ if(/\b(cat|kitten|meow)\b/.test(q))return 'Cats say meow! A kitten is a baby cat. Can you make a gentle meow sound?';
+ if(/\b(dog|puppy|animal|animals|lion|elephant|duck|cow|rabbit)\b/.test(q))return 'Animals are amazing! A dog says woof, a cow says moo, and a duck says quack. Which animal is your favourite?';
+ if(/\b(shape|circle|square|triangle|star)\b/.test(q))return 'Let us learn shapes! A circle is round, a triangle has three sides, and a square has four sides. Can you find a circle nearby?';
+ if(/\b(thank|thanks)\b/.test(q))return 'You are very welcome! You are doing a wonderful job learning.';
+ if(/\b(help|learn|teach|play)\b/.test(q))return 'I can help you practise letters, numbers, colours, animals, and shapes. Try asking me to count with you or teach you a letter.';
+ return 'That is interesting! I am still learning how to answer that. You can ask me about letters, numbers, colours, animals, or shapes. What would you like to learn?'
+}
+function agentHandle(raw){const q=raw.trim();if(!q)return;agentAddMessage(q,'user');agentInput.value='';const reply=agentReply(q);agentAddMessage(reply,'bot');agentSpeak(reply)}
+function agentStartListening(){const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SpeechRecognition){agentStatus.textContent='Voice input unavailable — please type';agentAddMessage('Voice input is not supported in this browser. Please type your question below.','bot');return}if(agentListening){agentRecognition&&agentRecognition.stop();return}agentRecognition=new SpeechRecognition();agentRecognition.lang='en-IN';agentRecognition.interimResults=false;agentRecognition.maxAlternatives=1;agentRecognition.onstart=()=>{agentListening=true;agentMic.classList.add('listening');agentStatus.textContent='Listening… speak now'};agentRecognition.onerror=e=>{agentStatus.textContent=e.error==='not-allowed'?'Allow microphone access to talk':'I could not hear that. Try again or type.'};agentRecognition.onresult=e=>{agentInput.value=e.results[0][0].transcript};agentRecognition.onend=()=>{agentListening=false;agentMic.classList.remove('listening');agentStatus.textContent='Ready to listen';if(agentInput.value.trim())agentHandle(agentInput.value)};try{agentRecognition.start()}catch(e){agentStatus.textContent='Try the microphone again'}}
+agentOpen.onclick=()=>{agentPanel.hidden=!agentPanel.hidden;agentOpen.setAttribute('aria-expanded',String(!agentPanel.hidden));if(!agentPanel.hidden){agentInput.focus();agentStatus.textContent='Ready to listen'}};
+$('voiceAgentClose').onclick=()=>{agentPanel.hidden=true;agentOpen.setAttribute('aria-expanded','false');if(agentRecognition&&agentListening)agentRecognition.stop()};
+$('voiceAgentForm').onsubmit=e=>{e.preventDefault();agentHandle(agentInput.value)};
+agentMic.onclick=agentStartListening;
+document.querySelectorAll('[data-agent-prompt]').forEach(b=>b.onclick=()=>agentHandle(b.dataset.agentPrompt));
+$('startBtn').onclick=()=>openGame('animals');$('backBtn').onclick=back;$('homeBackBtn').onclick=()=>{if($('play').classList.contains('active')){back()}else if(window.history.length>1){window.history.back()}else{window.scrollTo({top:0,behavior:'smooth'})}};$('nextBtn').onclick=()=>{if(current==='memory'){if(memoryRound>=100)memoryRound=0;renderMemory();return}round++;if(round>=100)round=0;renderQuestion()};$('soundToggle').onclick=()=>{sound=!sound;$('soundToggle').textContent=sound?'🔊 Slow Voice: On':'🔊 Slow Voice: Off';$('soundToggle').setAttribute('aria-pressed',String(sound));if(!sound&&'speechSynthesis'in window)speechSynthesis.cancel();else speak('Hello little learner. Let us learn slowly together.')};updateStars();
 })();
 </script></body></html>
