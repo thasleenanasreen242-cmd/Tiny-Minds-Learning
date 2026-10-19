@@ -133,6 +133,62 @@ body:before{top:19%;left:3%}body:after{content:"✿";top:65%;right:3%;color:#c2a
 }
 
 
+
+/* Mobile-first finishing touches: comfortable touch targets, no sideways scrolling */
+*,*::before,*::after{box-sizing:border-box}
+html{width:100%;overflow-x:hidden;-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{width:100%;min-width:0;overflow-x:hidden}
+img,svg,video,canvas{max-width:100%}
+button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.wrap,.screen,.hero,.games,.feature,#playArea{min-width:0;max-width:100%}
+.game,.screen button{overflow-wrap:anywhere}
+@media(max-width:760px){
+ .wrap{padding:14px}
+ .top{align-items:center;gap:10px}
+ .brand{min-width:0;gap:8px;font-size:1rem}
+ .logo{width:42px;height:42px;flex:0 0 42px;border-radius:14px;font-size:23px}
+ .top>div:last-child{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px}
+ .pill{padding:10px 12px;min-height:42px;font-size:.88rem}
+ .hero{grid-template-columns:minmax(0,1fr);gap:8px;margin:16px 0 22px;padding:22px;border-radius:24px}
+ .hero h1{font-size:clamp(2rem,8vw,3rem);overflow-wrap:anywhere}
+ .hero p{font-size:1rem;line-height:1.55}
+ .hero-art{font-size:clamp(3.5rem,16vw,5.5rem);text-align:center}
+ .games{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+ .game{min-width:0;min-height:0;padding:14px;border-radius:19px}
+ .game h3{font-size:1rem;line-height:1.25;overflow-wrap:anywhere}
+ .game p{font-size:.88rem;line-height:1.45}
+ .emoji{width:54px;height:54px;border-radius:17px;font-size:30px;margin-bottom:10px}
+ .screen{width:100%;margin:12px auto;padding:14px;border-radius:20px;text-align:center}
+ .screen h2{font-size:clamp(1.35rem,5vw,1.8rem)}
+ #playArea .lesson-card{width:100%;max-width:100%!important;padding:16px 12px!important;margin:8px auto 14px!important}
+ #playArea .lesson-visual{width:min(100%,280px)!important;aspect-ratio:4/3!important}
+ #playArea .alphabet-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;padding:10px}
+ #playArea .alphabet-tile{min-width:0;min-height:0}
+ #playArea .choice{min-width:0;padding:10px;border-radius:15px}
+ #playArea .choice img{width:100%;height:clamp(64px,20vw,100px)!important;object-fit:cover}
+ #playArea button{max-width:100%;white-space:normal}
+ #playArea>div:last-child{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+ #playArea>div:last-child button{flex:1 1 100px}
+ .screen .back{min-height:44px;margin-bottom:12px}
+}
+@media(max-width:420px){
+ .wrap{padding:10px}
+ .top{align-items:flex-start}
+ .brand{font-size:.9rem}
+ .top>div:last-child{max-width:48%}
+ .pill{padding:9px 10px;font-size:.8rem}
+ .hero{padding:18px;border-radius:20px}
+ .games{gap:9px}
+ .game{padding:11px;border-radius:16px}
+ .game p{font-size:.82rem}
+ .game small{font-size:.76rem;line-height:1.3}
+ .emoji{width:46px;height:46px;font-size:26px;border-radius:14px}
+ #playArea .lesson-visual{width:min(100%,240px)!important;border-radius:17px!important}
+ #playArea .alphabet-grid{gap:6px;padding:8px}
+ #playArea .alphabet-tile{font-size:clamp(1.25rem,7vw,1.8rem);border-radius:11px}
+}
+@media(hover:none){.game:hover,#playArea button:hover{transform:none;box-shadow:inherit}}
+
 </style></head>
 <body><div class="wrap">
 <header class="top"><button class="pill home-back" id="homeBackBtn" type="button" aria-label="Go back to the previous page">← Back</button><div class="brand"><div class="logo" aria-hidden="true">🌱</div><span>Tiny Minds Learning</span></div><button class="pill" id="soundToggle" aria-pressed="false">🔊 Slow Voice: Off</button></header>
