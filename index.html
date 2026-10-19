@@ -172,11 +172,22 @@ const otherChoices=(list,idx)=>[1,2,3].map(n=>list[(idx+n*7)%list.length]);
 bank.animals=buildQuizBank('Animal Friends',animals,animalPrompts,(t,i)=>otherChoices(animals,i));
 bank.colors=buildQuizBank('Color Garden',colorTargets,colorPrompts,(t,i)=>otherChoices(colorTargets,i));
 bank.shapes=buildQuizBank('Shape Explorer',shapeTargets,shapePrompts,(t,i)=>otherChoices(shapeTargets,i));
-bank.count={label:'Count with Me',items:countTargets.flatMap((t,i)=>countPrompts.map(p=>({
- q:p(t,i),
- a:shuffle([t,...countTargets.filter((_,j)=>j!==i).slice(0,3)].map(x=>[x[0],x[1]])),
- correct:0
-})).map(item=>{item.correct=item.a.findIndex(a=>a[0]===t[0]);return item;})).slice(0,100)};
+bank.count={label:'Count with Me',items:countTargets.flatMap((t,i)=>Array.from({length:10},(_,variant)=>{
+ const prompts=[
+  'How many '+numberEmojis[i]+' can you count?',
+  'Tap the number '+t[0]+'.',
+  'Which number means '+t[1].toLowerCase()+'?',
+  'Can you count to '+t[1].toLowerCase()+'?',
+  'Find '+t[1].toLowerCase()+'!',
+  'Choose '+t[1].toLowerCase()+' from the number choices.',
+  'Let’s count together: '+t[1]+'.',
+  'Which number comes with '+t[1].toLowerCase()+'?',
+  'Show me the number '+t[0]+'.',
+  'You can do it! Find '+t[1].toLowerCase()+'.'
+ ];
+ const options=shuffle([t,...countTargets.filter((_,j)=>j!==i).slice(0,3)].map(x=>[x[0],x[1]]));
+ return {q:prompts[variant],a:options,correct:options.findIndex(a=>a[0]===t[0])};
+}))};
 bank.helpers=buildQuizBank('Everyday Helpers',helperTargets,helperPrompts,(t,i)=>otherChoices(helperTargets,i));
 
 function updateStars(){$('progress').textContent='⭐ '+stars+' stars collected';localStorage.setItem('tml-stars',String(stars))}
