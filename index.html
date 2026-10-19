@@ -373,7 +373,7 @@ lessons.numbers100={label:'Numbers 1–100',items:Array.from({length:100},(_,i)=
 function updateStars(){$('progress').textContent='⭐ '+stars+' stars collected';localStorage.setItem('tml-stars',String(stars))}
 function speak(t){if(sound&&'speechSynthesis'in window){speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(t);u.rate=.58;u.pitch=1.08;u.volume=1;const voices=speechSynthesis.getVoices();const english=voices.filter(v=>/^en(-|_)/i.test(v.lang));const femaleClear=english.find(v=>/samantha|aria|jenny|susan|zira|karen|moira|tessa|victoria|ava|allison|google us english|microsoft.*(jenny|aria|susan|zira|ava|jane)/i.test(v.name))||english.find(v=>/female/i.test(v.name))||english.find(v=>/natural|neural/i.test(v.name))||english[0];if(femaleClear)u.voice=femaleClear;u.onend=()=>{};speechSynthesis.speak(u)}}
 function shuffle(a){return a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(v=>v[1])}
-function openGame(id){current=id;round=0;$('home').style.display='none';$('play').classList.add('active');$('feedback').textContent='';$('nextBtn').hidden=true;if(id==='alphabetOnly')renderAlphabetGrid();else if(id==='colorTeaching')renderColourGrid();else if(lessons[id])renderTeaching();else if(id==='memory')renderMemory();else renderQuestion();window.scrollTo({top:0,behavior:'smooth'})}
+function openGame(id){current=id;round=0;$('home').style.display='none';$('play').classList.add('active');$('feedback').textContent='';$('nextBtn').hidden=true;if(id==='alphabetOnly')renderAlphabetGrid();else if(id==='colorTeaching')renderColourGrid();else if(id==='numbers100')renderNumberGrid();else if(lessons[id])renderTeaching();else if(id==='memory')renderMemory();else renderQuestion();window.scrollTo({top:0,behavior:'smooth'})}
 function renderAlphabetGrid(){
  const area=$('playArea');
  $('gameLabel').textContent='A to Z — Letters Only · 26 letters';
@@ -388,6 +388,32 @@ function renderAlphabetGrid(){
   tile.onclick=()=>{grid.querySelectorAll('.alphabet-tile').forEach(el=>el.classList.remove('selected'));tile.classList.add('selected');speak(letter);$('feedback').textContent='💜 Letter '+letter;};
   grid.appendChild(tile);
  });
+ area.appendChild(grid);
+}
+function renderNumberGrid(){
+ const area=$('playArea');
+ $('gameLabel').textContent='Numbers 1–100 · 100 numbers';
+ $('question').textContent='Touch a Number!';
+ $('prompt').textContent='Tap any number to hear it spoken aloud.';
+ $('feedback').textContent='🔢 Choose a number to begin!';
+ $('nextBtn').hidden=true;
+ area.className='number-grid-area';area.innerHTML='';
+ const grid=document.createElement('div');
+ grid.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,76px),1fr));gap:10px;width:100%;max-width:850px;margin:18px auto 28px';
+ const tileBackgrounds=['#fff0f6','#eef8ff','#fff7dc','#eaf9ef','#f1ebff','#ffeede'];
+ for(let n=1;n<=100;n++){
+  const tile=document.createElement('button');tile.type='button';tile.className='number-touch-tile';
+  tile.textContent=String(n);
+  tile.style.cssText='min-height:76px;display:flex;align-items:center;justify-content:center;padding:10px 4px;border:3px solid #fff;border-radius:20px;background:'+tileBackgrounds[(n-1)%tileBackgrounds.length]+';box-shadow:0 6px 16px #54406d10;color:#342d45;font-size:clamp(1.35rem,4vw,1.9rem);font-weight:1000;cursor:pointer;transition:transform .15s,box-shadow .15s';
+  tile.setAttribute('aria-label','Say number '+n);tile.setAttribute('aria-pressed','false');
+  tile.onclick=()=>{
+   grid.querySelectorAll('button').forEach(el=>{el.style.transform='scale(1)';el.style.boxShadow='0 6px 16px #54406d10';el.setAttribute('aria-pressed','false')});
+   tile.style.transform='scale(1.06)';tile.style.boxShadow='0 10px 24px #54406d24';tile.setAttribute('aria-pressed','true');
+   $('feedback').textContent='🔢 '+n+' · '+numberWord(n);
+   speak(numberWord(n));
+  };
+  grid.appendChild(tile);
+ }
  area.appendChild(grid);
 }
 function renderColourGrid(){
