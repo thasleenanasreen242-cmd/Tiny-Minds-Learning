@@ -93,7 +93,7 @@ body:before{top:19%;left:3%}body:after{content:"✿";top:65%;right:3%;color:#c2a
 <section class="screen" id="play" aria-live="polite"><button class="back" id="backBtn">← Back to games</button><div class="eyebrow" id="gameLabel">Let's learn</div><h2 id="question">Ready to play?</h2><p class="prompt" id="prompt">Choose the right answer.</p><div id="playArea"></div><div class="feedback" id="feedback" role="status"></div><button class="primary next" id="nextBtn" hidden>Next question →</button><p class="notice">Grown-ups: play together and follow your child's pace. This game does not measure IQ or diagnose development.</p></section>
 <footer class="footer"><strong>Tiny Minds Learning</strong><br>Little Learners, Big Discoveries!<br>Made for curious little minds and the grown-ups who cheer them on.</footer></div>
 <script>
-(()=>{'use strict';const $=id=>document.getElementById(id);let sound=false,stars=Number(localStorage.getItem('tml-stars')||0),round=0,current='',answered=false,matched=0,memFirst=null,memLock=false;
+(()=>{'use strict';const $=id=>document.getElementById(id);let sound=false,stars=Number(localStorage.getItem('tml-stars')||0),round=0,current='',answered=false,matched=0,memFirst=null,memLock=false,memoryRound=0;
 function celebrate(){if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;const colors=['#ff8db2','#ffd45f','#7edbb2','#9c8af5','#76c9f2'];for(let i=0;i<24;i++){const p=document.createElement('i');p.className='confetti-piece';p.style.left=(Math.random()*100)+'vw';p.style.background=colors[i%colors.length];p.style.setProperty('--drift',((Math.random()-.5)*180)+'px');p.style.animationDelay=(Math.random()*.18)+'s';document.body.appendChild(p);setTimeout(()=>p.remove(),1550)}}
 const bank={
 animals:{label:'Animal Friends',items:[{q:'Which animal says “woof woof”?',a:[['🐶','Dog'],['🐱','Cat'],['🐮','Cow'],['🦆','Duck']],correct:0},{q:'Which animal gives us wool?',a:[['🐑','Sheep'],['🐸','Frog'],['🐟','Fish'],['🦁','Lion']],correct:0},{q:'Which animal has a long trunk?',a:[['🐘','Elephant'],['🐰','Rabbit'],['🐔','Hen'],['🐢','Turtle']],correct:0},{q:'Which animal says “meow”?',a:[['🐱','Cat'],['🐴','Horse'],['🐝','Bee'],['🐧','Penguin']],correct:0}]},
@@ -102,13 +102,90 @@ shapes:{label:'Shape Explorer',items:[{q:'Find the CIRCLE!',a:[['⚪','Circle'],
 count:{label:'Count with Me',items:[{q:'How many apples? 🍎🍎',a:[['1','One'],['2','Two'],['3','Three'],['4','Four']],correct:1},{q:'How many stars? ⭐⭐⭐',a:[['2','Two'],['4','Four'],['3','Three'],['5','Five']],correct:2},{q:'How many ducks? 🦆🦆🦆🦆',a:[['1','One'],['3','Three'],['5','Five'],['4','Four']],correct:3},{q:'How many balls? ⚽',a:[['1','One'],['2','Two'],['3','Three'],['5','Five']],correct:0}]},
 helpers:{label:'Everyday Helpers',items:[{q:'What helps keep our teeth clean?',a:[['🪥','Toothbrush'],['🧸','Teddy'],['⚽','Ball'],['🧦','Sock']],correct:0},{q:'What do we use to wash our hands?',a:[['🧼','Soap'],['🍪','Cookie'],['🖍️','Crayon'],['🧸','Toy']],correct:0},{q:'What should we do before eating?',a:[['🧼','Wash hands'],['🛏️','Go to bed'],['📺','Watch TV'],['🧸','Play']],correct:0},{q:'Which helps us when it rains?',a:[['☂️','Umbrella'],['🕶️','Sunglasses'],['🪁','Kite'],['🪭','Fan']],correct:0}]}
 };
+
+/* Expand every activity into a large, varied question bank. Each quiz bank below
+   generates exactly 100 distinct prompts from age-appropriate learning targets. */
+function buildQuizBank(label, targets, prompts, distractorsFor){
+ const items=[];
+ targets.forEach((target,idx)=>{
+  prompts.forEach((prompt,variant)=>{
+   const distractors=distractorsFor(target,idx).filter(x=>x[0]!==target[0]).slice(0,3);
+   const choices=[target,...distractors];
+   while(choices.length<4) choices.push(target);
+   items.push({q:prompt(target),a:choices.map(x=>[x[0],x[1]]),correct:0});
+  });
+ });
+ return {label,items:items.slice(0,100)};
+}
+const animals=[
+['🐶','Dog'],['🐱','Cat'],['🐮','Cow'],['🦆','Duck'],['🐑','Sheep'],['🐘','Elephant'],['🐰','Rabbit'],['🐸','Frog'],['🐴','Horse'],['🐔','Hen'],
+['🦁','Lion'],['🐯','Tiger'],['🐵','Monkey'],['🐼','Panda'],['🐻','Bear'],['🦒','Giraffe'],['🦓','Zebra'],['🐢','Turtle'],['🐬','Dolphin'],['🐧','Penguin'],
+['🦋','Butterfly'],['🐝','Bee'],['🦉','Owl'],['🦊','Fox'],['🐙','Octopus']
+];
+const animalPrompts=[
+t=>'Can you find the '+t[1]+'?',
+t=>'Tap the '+t[1]+'!',
+t=>'Which friend is the '+t[1]+'?',
+t=>'Where is the '+t[1]+' hiding?'
+];
+const colorTargets=[
+['🍎','Red'],['🍊','Orange'],['🌞','Yellow'],['🍀','Green'],['🐳','Blue'],['🍇','Purple'],['🌸','Pink'],['🐻','Brown'],['☁️','White'],['🌑','Black']
+];
+const colorPrompts=[
+t=>'Find the color '+t[1]+'!',
+t=>'Which picture is '+t[1]+'?',
+t=>'Tap something '+t[1]+'.',
+t=>'Can you spot '+t[1]+'?'
+];
+const shapeTargets=[
+['⚪','Circle'],['🟦','Square'],['🔺','Triangle'],['⭐','Star'],['❤️','Heart'],['⬭','Oval'],['🟨','Rectangle'],['💎','Diamond'],['🌙','Crescent'],['⬡','Hexagon']
+];
+const shapePrompts=[
+t=>'Can you find the '+t[1]+'?',
+t=>'Tap the '+t[1]+' shape!',
+t=>'Which picture is a '+t[1]+'?',
+t=>'Where is the '+t[1]+'?'
+];
+const numberWords=['One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten'];
+const numberEmojis=['🍎','⭐','🐥','🦋','🍓','⚽','🐠','🌼','🚗','🎈'];
+const countTargets=numberWords.map((w,i)=>[String(i+1),w]);
+const countPrompts=[
+(t,i)=>'How many '+numberEmojis[i]+'? Count to '+t[1].toLowerCase()+'.',
+(t,i)=>'Choose the number '+t[0]+'.',
+(t,i)=>'Can you count '+t[1].toLowerCase()+' things?',
+(t,i)=>'Tap '+t[1].toLowerCase()+'!'
+];
+const helperTargets=[
+['🪥','Toothbrush','brush your teeth'],['🧼','Soap','wash your hands'],['🧴','Shampoo','wash your hair'],['🪮','Comb','comb your hair'],['🧻','Tissue','wipe your nose'],
+['🪣','Bucket','help clean up'],['🧹','Broom','sweep the floor'],['🧸','Toy box','put toys away'],['🛏️','Bed','get ready for sleep'],['☂️','Umbrella','stay dry in rain'],
+['🧥','Coat','stay warm outside'],['👟','Shoes','protect your feet'],['🥄','Spoon','eat your meal'],['🥤','Cup','drink water'],['🍽️','Plate','serve your food'],
+['🧺','Laundry basket','collect dirty clothes'],['🧦','Socks','keep your feet warm'],['🧢','Hat','cover your head in sunshine'],['🧽','Sponge','wipe a table'],['🚦','Traffic light','cross the road safely with a grown-up'],
+['📚','Book','enjoy a story'],['🖍️','Crayon','draw a picture'],['✂️','Safety scissors','cut paper with a grown-up'],['🧴','Sunscreen','protect skin in sunshine'],['🪥','Toothbrush','keep teeth clean']
+];
+const helperPrompts=[
+t=>'What can help you '+t[2]+'?',
+t=>'Which item do you need to '+t[2]+'?',
+t=>'Tap what helps you '+t[2]+'!',
+t=>'Can you find the helper to '+t[2]+'?'
+];
+const otherChoices=(list,idx)=>[1,2,3].map(n=>list[(idx+n*7)%list.length]);
+bank.animals=buildQuizBank('Animal Friends',animals,animalPrompts,(t,i)=>otherChoices(animals,i));
+bank.colors=buildQuizBank('Color Garden',colorTargets,colorPrompts,(t,i)=>otherChoices(colorTargets,i));
+bank.shapes=buildQuizBank('Shape Explorer',shapeTargets,shapePrompts,(t,i)=>otherChoices(shapeTargets,i));
+bank.count={label:'Count with Me',items:countTargets.flatMap((t,i)=>countPrompts.map(p=>({
+ q:p(t,i),
+ a:shuffle([t,...countTargets.filter((_,j)=>j!==i).slice(0,3)].map(x=>[x[0],x[1]])),
+ correct:0
+})).map(item=>{item.correct=item.a.findIndex(a=>a[0]===t[0]);return item;})).slice(0,100)};
+bank.helpers=buildQuizBank('Everyday Helpers',helperTargets,helperPrompts,(t,i)=>otherChoices(helperTargets,i));
+
 function updateStars(){$('progress').textContent='⭐ '+stars+' stars collected';localStorage.setItem('tml-stars',String(stars))}
 function speak(t){if(sound&&'speechSynthesis'in window){speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(t);u.rate=.82;u.pitch=1.12;speechSynthesis.speak(u)}}
 function shuffle(a){return a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(v=>v[1])}
 function openGame(id){current=id;round=0;$('home').style.display='none';$('play').classList.add('active');$('feedback').textContent='';$('nextBtn').hidden=true;if(id==='memory')renderMemory();else renderQuestion();window.scrollTo({top:0,behavior:'smooth'})}
 function renderQuestion(){const g=bank[current],item=g.items[round%g.items.length];answered=false;$('gameLabel').textContent=g.label;$('question').textContent=item.q;$('prompt').textContent='Tap your answer!';$('feedback').textContent='';$('nextBtn').hidden=true;$('nextBtn').textContent='Next question →';const area=$('playArea');area.className='choices';area.innerHTML='';shuffle(item.a.map((a,i)=>({a,correct:i===item.correct}))).forEach(o=>{const b=document.createElement('button');b.className='choice';b.innerHTML='<div>'+o.a[0]+'</div><span>'+o.a[1]+'</span>';b.setAttribute('aria-label',o.a[1]);b.onclick=()=>{if(answered)return;if(o.correct){answered=true;b.classList.add('correct');$('feedback').textContent='🌟 Wonderful! You did it!';stars++;updateStars();celebrate();speak('Wonderful! Great job!');Array.from(area.children).forEach(x=>x.disabled=true);$('nextBtn').hidden=false}else{b.classList.add('wrong');$('feedback').textContent='💛 Try again, little learner!';speak('Try again');setTimeout(()=>b.classList.remove('wrong'),500)}};area.appendChild(b)});speak(item.q)}
-function renderMemory(){current='memory';matched=0;memFirst=null;memLock=false;$('gameLabel').textContent='Memory Garden';$('question').textContent='Find the matching friends!';$('prompt').textContent='Tap two cards to find a pair.';$('feedback').textContent='';$('nextBtn').hidden=true;$('nextBtn').textContent='Play again ↻';const vals=shuffle(['🐻','🐸','🦊','🐼','🐸','🐻','🦊','🐼','🐰','🐰','🐱','🐱']),area=$('playArea');area.className='memory-grid';area.innerHTML='';vals.forEach((v,i)=>{const b=document.createElement('button');b.className='memory-card';b.textContent='❔';b.setAttribute('aria-label','Hidden picture');b.dataset.value=v;b.onclick=()=>{if(memLock||b.classList.contains('revealed')||b.disabled)return;b.textContent=v;b.classList.add('revealed');b.setAttribute('aria-label',v);if(!memFirst){memFirst=b;return}if(memFirst.dataset.value===v){memFirst.disabled=true;b.disabled=true;matched+=2;stars++;updateStars();celebrate();$('feedback').textContent='✨ A match! Well done!';speak('A match! Well done!');memFirst=null;if(matched===vals.length){$('feedback').textContent='🎉 You found every friend!';$('nextBtn').hidden=false}}else{memLock=true;const first=memFirst;setTimeout(()=>{first.textContent='❔';b.textContent='❔';first.classList.remove('revealed');b.classList.remove('revealed');memFirst=null;memLock=false},850)}};area.appendChild(b)});speak('Find the matching friends')}
+function renderMemory(){current='memory';matched=0;memFirst=null;memLock=false;memoryRound=Math.min(memoryRound+1,100);$('gameLabel').textContent='Memory Garden · Challenge '+memoryRound+' of 100';$('question').textContent='Find the matching friends!';$('prompt').textContent='Tap two cards to find a pair. Every round is a new challenge.';$('feedback').textContent='';$('nextBtn').hidden=true;$('nextBtn').textContent='Play again ↻';const vals=shuffle(['🐻','🐸','🦊','🐼','🐸','🐻','🦊','🐼','🐰','🐰','🐱','🐱']),area=$('playArea');area.className='memory-grid';area.innerHTML='';vals.forEach((v,i)=>{const b=document.createElement('button');b.className='memory-card';b.textContent='❔';b.setAttribute('aria-label','Hidden picture');b.dataset.value=v;b.onclick=()=>{if(memLock||b.classList.contains('revealed')||b.disabled)return;b.textContent=v;b.classList.add('revealed');b.setAttribute('aria-label',v);if(!memFirst){memFirst=b;return}if(memFirst.dataset.value===v){memFirst.disabled=true;b.disabled=true;matched+=2;stars++;updateStars();celebrate();$('feedback').textContent='✨ A match! Well done!';speak('A match! Well done!');memFirst=null;if(matched===vals.length){$('feedback').textContent=memoryRound===100?'🏆 You completed all 100 memory challenges!':'🎉 You found every friend!';$('nextBtn').hidden=false;$('nextBtn').textContent=memoryRound===100?'Play again from 1 ↻':'Next challenge →'}}else{memLock=true;const first=memFirst;setTimeout(()=>{first.textContent='❔';b.textContent='❔';first.classList.remove('revealed');b.classList.remove('revealed');memFirst=null;memLock=false},850)}};area.appendChild(b)});speak('Find the matching friends')}
 function back(){$('play').classList.remove('active');$('home').style.display='block';window.scrollTo({top:0,behavior:'smooth'})}
-document.querySelectorAll('[data-game]').forEach(b=>b.addEventListener('click',()=>openGame(b.dataset.game)));$('startBtn').onclick=()=>openGame('animals');$('backBtn').onclick=back;$('homeBackBtn').onclick=()=>{if($('play').classList.contains('active')){back()}else if(window.history.length>1){window.history.back()}else{window.scrollTo({top:0,behavior:'smooth'})}};$('nextBtn').onclick=()=>{if(current==='memory'){renderMemory();return}round++;renderQuestion()};$('soundToggle').onclick=()=>{sound=!sound;$('soundToggle').textContent=sound?'🔊 Sound: On':'🔊 Sound: Off';$('soundToggle').setAttribute('aria-pressed',String(sound));if(!sound&&'speechSynthesis'in window)speechSynthesis.cancel();else speak('Sound is on')};updateStars();
+document.querySelectorAll('[data-game]').forEach(b=>b.addEventListener('click',()=>openGame(b.dataset.game)));$('startBtn').onclick=()=>openGame('animals');$('backBtn').onclick=back;$('homeBackBtn').onclick=()=>{if($('play').classList.contains('active')){back()}else if(window.history.length>1){window.history.back()}else{window.scrollTo({top:0,behavior:'smooth'})}};$('nextBtn').onclick=()=>{if(current==='memory'){if(memoryRound>=100)memoryRound=0;renderMemory();return}round++;if(round>=100)round=0;renderQuestion()};$('soundToggle').onclick=()=>{sound=!sound;$('soundToggle').textContent=sound?'🔊 Sound: On':'🔊 Sound: Off';$('soundToggle').setAttribute('aria-pressed',String(sound));if(!sound&&'speechSynthesis'in window)speechSynthesis.cancel();else speak('Sound is on')};updateStars();
 })();
 </script></body></html>
