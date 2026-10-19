@@ -146,6 +146,7 @@ body:before{top:19%;left:3%}body:after{content:"✿";top:65%;right:3%;color:#c2a
 <button class="game" data-game="fruitNames"><div class="emoji" style="background:var(--yellow)">🍓</div><h3>Fruit Names</h3><p>Discover yummy fruits and learn what each is called.</p><small>Learn fruit names →</small></button>
 <button class="game" data-game="animals"><div class="emoji" style="background:var(--pink)">🐶</div><h3>Animal Friends</h3><p>Meet friendly animals and learn their names.</p><small>Explore animals →</small></button>
 <button class="game" data-game="colors"><div class="emoji" style="background:var(--yellow)">🎨</div><h3>Color Garden</h3><p>Find bright colors and match them together.</p><small>Discover colors →</small></button>
+<button class="game" data-game="colorTeaching"><div class="emoji" style="background:#fce7f3">🌈</div><h3>Learn Colours</h3><p>Learn colour names with big, bright colour cards and a clear voice.</p><small>Learn colours →</small></button>
 <button class="game" data-game="shapes"><div class="emoji" style="background:var(--purple)">🔺</div><h3>Shape Explorer</h3><p>Discover circles, squares, stars, and more.</p><small>Find shapes →</small></button>
 <button class="game" data-game="count"><div class="emoji" style="background:var(--mint)">🔢</div><h3>Count with Me</h3><p>Practice counting with playful number games.</p><small>Count together →</small></button>
 <button class="game" data-game="memory"><div class="emoji" style="background:var(--blue)">🧠</div><h3>Memory Garden</h3><p>Flip cards, remember pictures, and find matching pairs.</p><small>Play memory →</small></button>
@@ -253,6 +254,9 @@ bank.helpers=buildQuizBank('Everyday Helpers',helperTargets,helperPrompts,(t,i)=
 
 
 const lessons={
+ colorTeaching:{label:'Learn Colours',items:[
+ ['Red','#ef4444','This is red.'],['Blue','#3b82f6','This is blue.'],['Yellow','#facc15','This is yellow.'],['Green','#22c55e','This is green.'],['Orange','#f97316','This is orange.'],['Purple','#a855f7','This is purple.'],['Pink','#ec4899','This is pink.'],['Black','#222222','This is black.'],['White','#ffffff','This is white.'],['Brown','#925b36','This is brown.'],['Grey','#9ca3af','This is grey.']]
+
  alphabet:{label:'ABC Adventure',items:[
  ['A','🍎','Apple'],['B','⚽','Ball'],['C','🐱','Cat'],['D','🐶','Dog'],['E','🥚','Egg'],['F','🐟','Fish'],['G','🍇','Grapes'],['H','🏠','House'],['I','🍦','Ice cream'],['J','🧃','Juice'],['K','🪁','Kite'],['L','🦁','Lion'],['M','🌙','Moon'],['N','🪺','Nest'],['O','🍊','Orange'],['P','🐼','Panda'],['Q','👸','Queen'],['R','🌈','Rainbow'],['S','☀️','Sun'],['T','🐢','Turtle'],['U','☂️','Umbrella'],['V','🚐','Van'],['W','🍉','Watermelon'],['X','🎼','Xylophone'],['Y','🪀','Yo-yo'],['Z','🦓','Zebra']]},
  animalNames:{label:'Animal Names',items:[
@@ -302,8 +306,8 @@ async function getAnimalPhoto(name){
 function renderTeaching(){
  const lesson=lessons[current],item=lesson.items[round%lesson.items.length],area=$('playArea');
  $('gameLabel').textContent=lesson.label+' · '+(round+1)+' of '+lesson.items.length;
- $('question').textContent=current==='numbers100'?'Number '+item[0]:current==='alphabet'?'Letter '+item[0]:item[1];
- $('prompt').textContent=current==='numbers100'?'Let’s count together!':current==='alphabet'?'Say the letter, then the word!':'Look, say the name, and learn together!';
+ $('question').textContent=current==='numbers100'?'Number '+item[0]:current==='alphabet'?'Letter '+item[0]:current==='colorTeaching'?'Colour '+item[0]:item[1];
+ $('prompt').textContent=current==='numbers100'?'Let’s count together!':current==='alphabet'?'Say the letter, then the word!':current==='colorTeaching'?'Look at the colour, say its name, and listen!':'Look, say the name, and learn together!';
  area.className='';area.innerHTML='';
  const card=document.createElement('div');card.className='lesson-card';
  card.style.cssText='background:linear-gradient(145deg,#fff8fc,#f3f0ff);border:1px solid #eee5f5;border-radius:26px;padding:clamp(24px,6vw,48px) 16px;margin:8px auto 18px;max-width:470px;box-shadow:0 12px 30px #54406d12';
@@ -339,11 +343,10 @@ function renderTeaching(){
   else if(photoId){img.src='https://images.unsplash.com/'+photoId+'?auto=format&fit=crop&w=700&q=80';visual.appendChild(img)}
   else{visual.textContent=fallbackVisual}
  };
- showImage();
- visual.style.background='linear-gradient(145deg,#fff0f6,#eef8ff)';
- const main=document.createElement('div');main.textContent=current==='alphabet'?item[0]:current==='numbers100'?item[0]:item[1];main.style.cssText='font-size:clamp(3rem,10vw,5.5rem);font-weight:1000;line-height:1.1;color:#6750a4;letter-spacing:-.04em';
- const word=document.createElement('div');word.textContent=current==='alphabet'?item[2]:current==='numbers100'?item[2]:item[1];word.style.cssText='font-size:clamp(1.5rem,5vw,2.1rem);font-weight:900;margin-top:12px;color:#302747';
- const detail=document.createElement('p');detail.textContent=current==='alphabet'?(item[0]+' is for '+item[2]+'.'):current==='numbers100'?'This is number '+item[0]+'. Let’s say '+item[2]+'.':item[2]||('This is a '+item[1]+'.');detail.style.cssText='font-size:1.05rem;color:#716981;margin:10px auto 0;max-width:320px;line-height:1.5';
+ if(current==='colorTeaching'){visual.innerHTML='';visual.textContent='';visual.style.background=item[1];visual.style.border='8px solid #ffffff';visual.style.boxShadow='0 12px 28px #54406d20'}else{showImage();visual.style.background='linear-gradient(145deg,#fff0f6,#eef8ff)'}
+ const main=document.createElement('div');main.textContent=current==='alphabet'?item[0]:current==='numbers100'?item[0]:current==='colorTeaching'?item[0]:item[1];main.style.cssText='font-size:clamp(3rem,10vw,5.5rem);font-weight:1000;line-height:1.1;color:#6750a4;letter-spacing:-.04em';
+ const word=document.createElement('div');word.textContent=current==='alphabet'?item[2]:current==='numbers100'?item[2]:current==='colorTeaching'?item[2]:item[1];word.style.cssText='font-size:clamp(1.5rem,5vw,2.1rem);font-weight:900;margin-top:12px;color:#302747';
+ const detail=document.createElement('p');detail.textContent=current==='alphabet'?(item[0]+' is for '+item[2]+'.'):current==='numbers100'?'This is number '+item[0]+'. Let’s say '+item[2]+'.':current==='colorTeaching'?'Can you say '+item[0]+'? '+item[2]:item[2]||('This is a '+item[1]+'.');detail.style.cssText='font-size:1.05rem;color:#716981;margin:10px auto 0;max-width:320px;line-height:1.5';
  card.append(visual,main,word,detail);area.appendChild(card);
  const controls=document.createElement('div');controls.style.cssText='display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;width:100%;max-width:470px;margin:0 auto';
  const prev=document.createElement('button');prev.className='back';prev.textContent='← Previous';prev.disabled=round===0;prev.style.opacity=round===0?'.45':'1';prev.onclick=()=>{if(round>0){round--;renderTeaching()}};controls.appendChild(prev);
