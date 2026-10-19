@@ -95,6 +95,16 @@ body:before{top:19%;left:3%}body:after{content:"✿";top:65%;right:3%;color:#c2a
 #playArea button:focus-visible{outline:3px solid #b5a4f6;outline-offset:3px}
 @media(max-width:480px){.lesson-visual{width:min(100%,360px)!important;border-radius:20px!important}.lesson-card{border-radius:24px!important}#playArea>div:last-child{justify-content:center!important}#playArea>div:last-child button{flex:1 1 100px}}
 
+
+/* Letter-only A–Z activity */
+.alphabet-only-area{width:100%;max-width:700px;margin:18px auto 8px}
+.alphabet-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;padding:clamp(12px,3vw,22px);border:1px solid #eee6fa;border-radius:28px;background:linear-gradient(145deg,#fffafd,#f3f0ff 60%,#eefaff);box-shadow:0 16px 36px #54406d12}
+.alphabet-tile{aspect-ratio:1;min-width:0;border:2px solid #fff;border-radius:18px;background:#fff;box-shadow:0 5px 12px #54406d10;color:#5544a4;font-size:clamp(1.35rem,4vw,2.1rem);font-weight:1000;cursor:pointer;transition:transform .16s,background .16s,border-color .16s,box-shadow .16s}
+.alphabet-tile:nth-child(4n+2){background:#fff0f6;color:#b34e7b}.alphabet-tile:nth-child(4n+3){background:#e9f9f1;color:#277b62}.alphabet-tile:nth-child(4n+4){background:#fff7df;color:#9a6b17}
+.alphabet-tile:hover{transform:translateY(-3px);box-shadow:0 9px 18px #54406d1a}
+.alphabet-tile.selected{outline:3px solid #9b87e8;outline-offset:1px;background:#e8e1ff;color:#44318f}
+@media(max-width:520px){.alphabet-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;padding:12px;border-radius:22px}.alphabet-tile{border-radius:14px}}
+
 </style></head>
 <body><div class="wrap">
 <header class="top"><button class="pill home-back" id="homeBackBtn" type="button" aria-label="Go back to the previous page">← Back</button><div class="brand"><div class="logo" aria-hidden="true">🌱</div><span>Tiny Minds Learning</span></div><button class="pill" id="soundToggle" aria-pressed="false">🔊 Slow Voice: Off</button></header>
@@ -102,6 +112,7 @@ body:before{top:19%;left:3%}body:after{content:"✿";top:65%;right:3%;color:#c2a
 <div class="section-head"><div><h2>What shall we explore?</h2><p>Choose a game to begin your adventure.</p></div><div class="progress" id="progress">⭐ 0 stars collected</div></div>
 <section class="games" aria-label="Toddler learning games">
 <button class="game" data-game="alphabet"><div class="emoji" style="background:var(--pink)">🔤</div><h3>ABC Adventure</h3><p>Learn letters A to Z with friendly pictures and words.</p><small>Learn the alphabet →</small></button>
+<button class="game" data-game="alphabetOnly"><div class="emoji" style="background:#e8e1ff">🔠</div><h3>A to Z — Letters Only</h3><p>See all 26 letters together. Tap any letter to hear its name—no pictures or words.</p><small>Explore A to Z →</small></button>
 <button class="game" data-game="numbers100"><div class="emoji" style="background:var(--mint)">💯</div><h3>Numbers 1–100</h3><p>Count from one all the way to one hundred.</p><small>Learn numbers →</small></button>
 <button class="game" data-game="animalNames"><div class="emoji" style="background:var(--blue)">🦁</div><h3>Animal Names</h3><p>Meet animals, see their names, and say them aloud.</p><small>Learn animal names →</small></button>
 <button class="game" data-game="fruitNames"><div class="emoji" style="background:var(--yellow)">🍓</div><h3>Fruit Names</h3><p>Discover yummy fruits and learn what each is called.</p><small>Learn fruit names →</small></button>
@@ -229,7 +240,23 @@ lessons.numbers100={label:'Numbers 1–100',items:Array.from({length:100},(_,i)=
 function updateStars(){$('progress').textContent='⭐ '+stars+' stars collected';localStorage.setItem('tml-stars',String(stars))}
 function speak(t){if(sound&&'speechSynthesis'in window){speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(t);u.rate=.58;u.pitch=1.08;u.volume=.9;const voices=speechSynthesis.getVoices();const childFriendly=voices.find(v=>/^en(-|_)/i.test(v.lang)&&/female|child|natural|samantha|zira|aria/i.test(v.name))||voices.find(v=>/^en(-|_)/i.test(v.lang));if(childFriendly)u.voice=childFriendly;u.onend=()=>{};speechSynthesis.speak(u)}}
 function shuffle(a){return a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(v=>v[1])}
-function openGame(id){current=id;round=0;$('home').style.display='none';$('play').classList.add('active');$('feedback').textContent='';$('nextBtn').hidden=true;if(lessons[id])renderTeaching();else if(id==='memory')renderMemory();else renderQuestion();window.scrollTo({top:0,behavior:'smooth'})}
+function openGame(id){current=id;round=0;$('home').style.display='none';$('play').classList.add('active');$('feedback').textContent='';$('nextBtn').hidden=true;if(id==='alphabetOnly')renderAlphabetGrid();else if(lessons[id])renderTeaching();else if(id==='memory')renderMemory();else renderQuestion();window.scrollTo({top:0,behavior:'smooth'})}
+function renderAlphabetGrid(){
+ const area=$('playArea');
+ $('gameLabel').textContent='A to Z — Letters Only · 26 letters';
+ $('question').textContent='The Alphabet';
+ $('prompt').textContent='Tap a letter to hear it. Just letters—no picture words!';
+ $('feedback').textContent='✨ Explore every letter at your own pace.';
+ $('nextBtn').hidden=true;
+ area.className='alphabet-only-area';area.innerHTML='';
+ const grid=document.createElement('div');grid.className='alphabet-grid';
+ 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(letter=>{
+  const tile=document.createElement('button');tile.type='button';tile.className='alphabet-tile';tile.textContent=letter;tile.setAttribute('aria-label','Say letter '+letter);
+  tile.onclick=()=>{grid.querySelectorAll('.alphabet-tile').forEach(el=>el.classList.remove('selected'));tile.classList.add('selected');speak(letter);$('feedback').textContent='💜 Letter '+letter;};
+  grid.appendChild(tile);
+ });
+ area.appendChild(grid);
+}
 function renderTeaching(){
  const lesson=lessons[current],item=lesson.items[round%lesson.items.length],area=$('playArea');
  $('gameLabel').textContent=lesson.label+' · '+(round+1)+' of '+lesson.items.length;
