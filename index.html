@@ -479,7 +479,12 @@ function agentReply(raw){const q=raw.toLowerCase().trim();if(!q)return 'Tell me 
 function agentHandle(raw){const q=raw.trim();if(!q)return;agentAddMessage(q,'user');agentInput.value='';const reply=agentReply(q);agentAddMessage(reply,'bot');agentSpeak(reply)}
 async function agentStartListening(){
  const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
- if(!SpeechRecognition){agentStatus.textContent='Voice input is not supported';agentAddMessage('Your browser does not support voice input here. Please use Google Chrome or type your question.','bot');return}
+ if(!SpeechRecognition){
+  agentStatus.textContent='Use your phone keyboard mic';
+  agentAddMessage('Your browser does not support in-page voice recognition. Tap the message box, open your phone keyboard, then tap its 🎙️ microphone to dictate your question. You can also type and press Send.','bot');
+  agentInput.focus();
+  return;
+ }
  if(agentListening){if(agentRecognition)agentRecognition.stop();return}
  agentMic.disabled=true;agentStatus.textContent='Checking microphone…';
  try{
@@ -489,10 +494,10 @@ async function agentStartListening(){
   }
  }catch(err){
   agentMic.disabled=false;
-  if(err&&err.name==='NotAllowedError'){agentStatus.textContent='Microphone permission blocked';agentAddMessage('Please allow microphone access for this website. Click the lock/tune icon beside the website address, open Site settings, set Microphone to Allow, then refresh.','bot')}
-  else if(err&&err.name==='NotFoundError'){agentStatus.textContent='No microphone found';agentAddMessage('I could not find a microphone. Connect a microphone or headset, then try again.','bot')}
-  else{agentStatus.textContent='Could not access microphone';agentAddMessage('I could not access your microphone. Check that it is connected and not being used by another app, then try again.','bot')}
-  return
+  if(err&&(/NotAllowedError|PermissionDeniedError/.test(err.name||''))){agentStatus.textContent='Microphone permission blocked';agentAddMessage('Microphone access is blocked. Allow it for this site in your browser settings, reload, and try again. If this browser does not support voice recognition, use the microphone on your phone keyboard instead.','bot')}
+  else if(err&&(/NotFoundError|DevicesNotFoundError/.test(err.name||''))){agentStatus.textContent='No microphone found';agentAddMessage('I could not find a microphone. Check your phone microphone, then try again.','bot')}
+  else{agentStatus.textContent='Could not access microphone';agentAddMessage('I could not access the microphone. Check browser and phone privacy settings, or use the microphone on your keyboard to dictate into the message box.','bot')}
+  return;
  }
  try{
   agentRecognition=new SpeechRecognition();
@@ -501,20 +506,20 @@ async function agentStartListening(){
   agentRecognition.onerror=e=>{
    agentListening=false;agentMic.disabled=false;agentMic.classList.remove('listening');agentMic.setAttribute('aria-label','Speak to the learning assistant');
    const messages={
-    'not-allowed':'Microphone permission is blocked. Allow microphone access in your browser site settings, then refresh.',
-    'service-not-allowed':'Voice recognition is blocked by the browser. Check microphone and speech permissions.',
-    'audio-capture':'No working microphone was found. Connect or enable a microphone.',
+    'not-allowed':'Microphone permission is blocked. Allow microphone access in your browser site settings, then reload.',
+    'service-not-allowed':'This browser blocks speech recognition. Try Chrome on Android, or use your phone keyboard microphone.',
+    'audio-capture':'No working microphone was found. Check your phone microphone and privacy settings.',
     'no-speech':'I did not hear anything. Tap the microphone and speak clearly.',
-    'network':'Voice recognition needs a network connection. Check your internet and try again.',
+    'network':'Speech recognition needs an internet connection. Check your connection and try again.',
     'aborted':'Voice listening was stopped.'
    };
-   agentStatus.textContent=messages[e.error]||'Voice error: '+e.error;
-   if(e.error!=='aborted')agentAddMessage(messages[e.error]||'Voice input failed. You can type your question instead.','bot');
+   agentStatus.textContent=messages[e.error]||'Voice input failed';
+   if(e.error!=='aborted')agentAddMessage(messages[e.error]||'Voice input failed. You can type your question or use your phone keyboard microphone.','bot');
   };
   agentRecognition.onresult=e=>{const heard=e.results&&e.results[0]&&e.results[0][0]?e.results[0][0].transcript:'';if(heard)agentInput.value=heard};
   agentRecognition.onend=()=>{agentListening=false;agentMic.disabled=false;agentMic.classList.remove('listening');agentMic.setAttribute('aria-label','Speak to the learning assistant');if(agentInput.value.trim())agentHandle(agentInput.value);else if(agentStatus.textContent==='Listening… speak now')agentStatus.textContent='Ready to listen'};
   agentRecognition.start();
- }catch(err){agentMic.disabled=false;agentStatus.textContent='Could not start voice input';agentAddMessage('I could not start listening. Refresh the page and try again, or type your question.','bot')}
+ }catch(err){agentMic.disabled=false;agentStatus.textContent='Could not start voice input';agentAddMessage('I could not start listening. Try Chrome on Android, or use your phone keyboard microphone to dictate your question.','bot')}
 }
 agentOpen.onclick=()=>{agentPanel.hidden=!agentPanel.hidden;agentOpen.setAttribute('aria-expanded',String(!agentPanel.hidden));if(!agentPanel.hidden){agentInput.focus();agentStatus.textContent='Ready to listen'}};
 $('voiceAgentClose').onclick=()=>{agentPanel.hidden=true;agentOpen.setAttribute('aria-expanded','false');if(agentRecognition&&agentListening)agentRecognition.stop()};
