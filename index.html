@@ -206,7 +206,7 @@ const lessons={
  ['🍎','Apple','A crunchy apple'],['🍌','Banana','A yellow banana'],['🍊','Orange','A juicy orange'],['🍇','Grapes','Little grapes grow in bunches'],['🍉','Watermelon','A big juicy watermelon'],['🍓','Strawberry','A sweet strawberry'],['🍍','Pineapple','A spiky pineapple'],['🥭','Mango','A sweet mango'],['🍐','Pear','A green or yellow pear'],['🍑','Peach','A soft peach'],['🍒','Cherries','Two little cherries'],['🥝','Kiwi','A kiwi has green fruit inside'],['🍋','Lemon','A sour lemon'],['🫐','Blueberries','Tiny blue berries'],['🥥','Coconut','A coconut has a hard shell'],['🍈','Melon','A sweet melon'],['🍏','Green apple','A green apple'],['🍅','Tomato','A tomato is often used as a vegetable'],['🍋','Lime','A little green lime'],['🍇','Raisins','Raisins are dried grapes'],['🍎','Red apple','A red apple'],['🍊','Mandarin','A small easy-to-peel orange'],['🍐','Asian pear','A crisp pear'],['🍑','Nectarine','A smooth-skinned fruit'],['🍒','Black cherries','Dark sweet cherries']]}}
 function numberWord(n){
  const ones=['zero','one','two','three','four','five','six','seven','eight','nine'],teens=['ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen'],tens=['','','twenty','thirty','forty','fifty','sixty','seventy','eighty','ninety'];
- if(n<10)return ones[n];if(n<20)return teens[n-10];return tens[Math.floor(n/10)]+(n%10?'-'+ones[n%10]:'');
+ if(n<10)return ones[n];if(n<20)return teens[n-10];return tens[Math.floor(n/10)]+(n%10?' '+ones[n%10]:'');
 }
 lessons.numbers100={label:'Numbers 1–100',items:Array.from({length:100},(_,i)=>[String(i+1),'🔢',numberWord(i+1)])};
 
@@ -239,7 +239,7 @@ function renderTeaching(){
  'rabbit':'photo-1585110396000-c9ffd4e4b308','duck':'photo-1555852095-64e7428df0fa','turtle':'photo-1437622368342-7a3d73a34c8f',
  'dolphin':'photo-1607153333879-c174d265f1d2','monkey':'photo-1540573133985-87b6da6d54a9','bear':'photo-1568162603664-fcd658421851',
  'sheep':'photo-1484557985045-edf25e08da73','hen':'photo-1548550023-2bdb3c5beed7','frog':'photo-1535591273668-578e31182c4f',
- 'parrot':'photo-1552728089-57bdde30beb3','peacock':'photo-1519608487953-e999c86e7455','camel':'photo-1512632578888-169bbbc64f33'
+ 'parrot':'photo-1552728089-57bdde30beb3','peacock':'photo-1519608487953-e999c86e7455','camel':'photo-1512632578888-169bbbc64f33','octopus':'photo-1545670723-196ed0954986','hippo':'photo-1551085254-e96b210db58a','rhino':'photo-1535338454770-8be927b5a00b'
  };
  const imageKey=(current==='alphabet'?item[2]:current==='numbers100'?'apple':item[1]).toLowerCase();
  const photoId=photoMap[imageKey];
@@ -250,7 +250,7 @@ function renderTeaching(){
  card.append(visual,main,word,detail);area.appendChild(card);
  const controls=document.createElement('div');controls.style.cssText='display:flex;justify-content:center;gap:10px;flex-wrap:wrap';
  const prev=document.createElement('button');prev.className='back';prev.textContent='← Previous';prev.disabled=round===0;prev.style.opacity=round===0?'.45':'1';prev.onclick=()=>{if(round>0){round--;renderTeaching()}};controls.appendChild(prev);
- const say=document.createElement('button');say.className='back';say.textContent='🔊 Say it';say.onclick=()=>speak(current==='alphabet'?(item[0]+'. '+item[2]):current==='numbers100'?(item[0]+'. '+item[2]):item[1]+'. '+item[2]);controls.appendChild(say);
+ const say=document.createElement('button');say.className='back';say.textContent='🔊 Say it';say.onclick=()=>speak(current==='alphabet'?(item[0]+'. '+item[2]):current==='numbers100'?item[2]:item[1]+'. '+item[2]);controls.appendChild(say);
  area.appendChild(controls);$('feedback').textContent='🌱 Learn at your own pace';$('nextBtn').hidden=false;$('nextBtn').textContent=round===lesson.items.length-1?'Start again ↻':'Next →';$('nextBtn').onclick=()=>{round=round>=lesson.items.length-1?0:round+1;renderTeaching()};speak(current==='alphabet'?(item[0]+'. '+item[2]):current==='numbers100'?(item[0]+'. '+item[2]):item[1]);
 }
 function renderQuestion(){const g=bank[current],item=g.items[round%g.items.length];$('nextBtn').onclick=()=>{round++;if(round>=100)round=0;renderQuestion()};answered=false;$('gameLabel').textContent=g.label;$('question').textContent=item.q;$('prompt').textContent='Tap your answer!';$('feedback').textContent='';$('nextBtn').hidden=true;$('nextBtn').textContent='Next question →';const area=$('playArea');area.className='choices';area.innerHTML='';shuffle(item.a.map((a,i)=>({a,correct:i===item.correct}))).forEach(o=>{const b=document.createElement('button');b.className='choice';b.innerHTML='<div>'+o.a[0]+'</div><span>'+o.a[1]+'</span>';b.setAttribute('aria-label',o.a[1]);b.onclick=()=>{if(answered)return;if(o.correct){answered=true;b.classList.add('correct');$('feedback').textContent='🌟 Wonderful! You did it!';stars++;updateStars();celebrate();speak('Wonderful! Great job!');Array.from(area.children).forEach(x=>x.disabled=true);$('nextBtn').hidden=false}else{b.classList.add('wrong');$('feedback').textContent='💛 Try again, little learner!';speak('Try again');setTimeout(()=>b.classList.remove('wrong'),500)}};area.appendChild(b)});speak(item.q)}
