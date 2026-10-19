@@ -477,7 +477,45 @@ function agentReply(raw){const q=raw.toLowerCase().trim();if(!q)return 'Tell me 
  return 'That is interesting! I am still learning how to answer that. You can ask me about letters, numbers, colours, animals, or shapes. What would you like to learn?'
 }
 function agentHandle(raw){const q=raw.trim();if(!q)return;agentAddMessage(q,'user');agentInput.value='';const reply=agentReply(q);agentAddMessage(reply,'bot');agentSpeak(reply)}
-function agentStartListening(){const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SpeechRecognition){agentStatus.textContent='Voice input unavailable — please type';agentAddMessage('Voice input is not supported in this browser. Please type your question below.','bot');return}if(agentListening){agentRecognition&&agentRecognition.stop();return}agentRecognition=new SpeechRecognition();agentRecognition.lang='en-IN';agentRecognition.interimResults=false;agentRecognition.maxAlternatives=1;agentRecognition.onstart=()=>{agentListening=true;agentMic.classList.add('listening');agentStatus.textContent='Listening… speak now'};agentRecognition.onerror=e=>{agentStatus.textContent=e.error==='not-allowed'?'Allow microphone access to talk':'I could not hear that. Try again or type.'};agentRecognition.onresult=e=>{agentInput.value=e.results[0][0].transcript};agentRecognition.onend=()=>{agentListening=false;agentMic.classList.remove('listening');agentStatus.textContent='Ready to listen';if(agentInput.value.trim())agentHandle(agentInput.value)};try{agentRecognition.start()}catch(e){agentStatus.textContent='Try the microphone again'}}
+async function agentStartListening(){
+ const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!SpeechRecognition){agentStatus.textContent='Voice input is not supported';agentAddMessage('Your browser does not support voice input here. Please use Google Chrome or type your question.','bot');return}
+ if(agentListening){if(agentRecognition)agentRecognition.stop();return}
+ agentMic.disabled=true;agentStatus.textContent='Checking microphone…';
+ try{
+  if(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia){
+   const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+   stream.getTracks().forEach(track=>track.stop());
+  }
+ }catch(err){
+  agentMic.disabled=false;
+  if(err&&err.name==='NotAllowedError'){agentStatus.textContent='Microphone permission blocked';agentAddMessage('Please allow microphone access for this website. Click the lock/tune icon beside the website address, open Site settings, set Microphone to Allow, then refresh.','bot')}
+  else if(err&&err.name==='NotFoundError'){agentStatus.textContent='No microphone found';agentAddMessage('I could not find a microphone. Connect a microphone or headset, then try again.','bot')}
+  else{agentStatus.textContent='Could not access microphone';agentAddMessage('I could not access your microphone. Check that it is connected and not being used by another app, then try again.','bot')}
+  return
+ }
+ try{
+  agentRecognition=new SpeechRecognition();
+  agentRecognition.lang='en-IN';agentRecognition.interimResults=false;agentRecognition.maxAlternatives=1;
+  agentRecognition.onstart=()=>{agentListening=true;agentMic.disabled=false;agentMic.classList.add('listening');agentStatus.textContent='Listening… speak now';agentMic.setAttribute('aria-label','Stop listening')};
+  agentRecognition.onerror=e=>{
+   agentListening=false;agentMic.disabled=false;agentMic.classList.remove('listening');agentMic.setAttribute('aria-label','Speak to the learning assistant');
+   const messages={
+    'not-allowed':'Microphone permission is blocked. Allow microphone access in your browser site settings, then refresh.',
+    'service-not-allowed':'Voice recognition is blocked by the browser. Check microphone and speech permissions.',
+    'audio-capture':'No working microphone was found. Connect or enable a microphone.',
+    'no-speech':'I did not hear anything. Tap the microphone and speak clearly.',
+    'network':'Voice recognition needs a network connection. Check your internet and try again.',
+    'aborted':'Voice listening was stopped.'
+   };
+   agentStatus.textContent=messages[e.error]||'Voice error: '+e.error;
+   if(e.error!=='aborted')agentAddMessage(messages[e.error]||'Voice input failed. You can type your question instead.','bot');
+  };
+  agentRecognition.onresult=e=>{const heard=e.results&&e.results[0]&&e.results[0][0]?e.results[0][0].transcript:'';if(heard)agentInput.value=heard};
+  agentRecognition.onend=()=>{agentListening=false;agentMic.disabled=false;agentMic.classList.remove('listening');agentMic.setAttribute('aria-label','Speak to the learning assistant');if(agentInput.value.trim())agentHandle(agentInput.value);else if(agentStatus.textContent==='Listening… speak now')agentStatus.textContent='Ready to listen'};
+  agentRecognition.start();
+ }catch(err){agentMic.disabled=false;agentStatus.textContent='Could not start voice input';agentAddMessage('I could not start listening. Refresh the page and try again, or type your question.','bot')}
+}
 agentOpen.onclick=()=>{agentPanel.hidden=!agentPanel.hidden;agentOpen.setAttribute('aria-expanded',String(!agentPanel.hidden));if(!agentPanel.hidden){agentInput.focus();agentStatus.textContent='Ready to listen'}};
 $('voiceAgentClose').onclick=()=>{agentPanel.hidden=true;agentOpen.setAttribute('aria-expanded','false');if(agentRecognition&&agentListening)agentRecognition.stop()};
 $('voiceAgentForm').onsubmit=e=>{e.preventDefault();agentHandle(agentInput.value)};
