@@ -79,6 +79,22 @@ body:before{top:19%;left:3%}body:after{content:"✿";top:65%;right:3%;color:#c2a
 @media(max-width:760px){.hero:after{right:10%;top:9%}.hero-art{order:-1}.games{gap:13px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 
+
+/* Learning cards and image frames: consistent, responsive picture crops */
+.lesson-card{width:100%;box-sizing:border-box;padding:clamp(18px,4vw,34px) clamp(14px,3vw,24px)!important;border-radius:30px!important;background:linear-gradient(145deg,#fffafd 0%,#f6f3ff 55%,#effaff 100%)!important;box-shadow:0 18px 44px #59437d16!important}
+.lesson-visual{box-sizing:border-box;isolation:isolate;flex-shrink:0;transition:box-shadow .2s,transform .2s}
+.lesson-visual img{width:100%;height:100%;object-fit:cover;object-position:center;border-radius:inherit}
+.lesson-card .lesson-visual:hover{transform:translateY(-2px);box-shadow:0 16px 32px #54406d22}
+#playArea{width:100%;min-width:0}
+#playArea .lesson-card{max-width:560px!important}
+#playArea .lesson-card>div:nth-child(2){margin-top:4px}
+#playArea .lesson-card>div:nth-child(3){letter-spacing:-.025em}
+#playArea .lesson-card>p{padding:0 8px}
+#playArea button{min-height:46px;transition:transform .18s,box-shadow .18s}
+#playArea button:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 8px 18px #59437d18}
+#playArea button:focus-visible{outline:3px solid #b5a4f6;outline-offset:3px}
+@media(max-width:480px){.lesson-visual{width:min(100%,360px)!important;border-radius:20px!important}.lesson-card{border-radius:24px!important}#playArea>div:last-child{justify-content:center!important}#playArea>div:last-child button{flex:1 1 100px}}
+
 </style></head>
 <body><div class="wrap">
 <header class="top"><button class="pill home-back" id="homeBackBtn" type="button" aria-label="Go back to the previous page">← Back</button><div class="brand"><div class="logo" aria-hidden="true">🌱</div><span>Tiny Minds Learning</span></div><button class="pill" id="soundToggle" aria-pressed="false">🔊 Slow Voice: Off</button></header>
@@ -213,7 +229,7 @@ function renderTeaching(){
  area.className='';area.innerHTML='';
  const card=document.createElement('div');card.className='lesson-card';
  card.style.cssText='background:linear-gradient(145deg,#fff8fc,#f3f0ff);border:1px solid #eee5f5;border-radius:26px;padding:clamp(24px,6vw,48px) 16px;margin:8px auto 18px;max-width:470px;box-shadow:0 12px 30px #54406d12';
- const visual=document.createElement('div');visual.style.cssText='font-size:clamp(4rem,13vw,7rem);line-height:1.2;margin:0 auto 16px;width:min(100%,340px);min-height:190px;display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:20px;background:#fff;box-shadow:0 8px 22px #54406d12';
+ const visual=document.createElement('div');visual.className='lesson-visual';visual.style.cssText='font-size:clamp(4rem,13vw,7rem);line-height:1.2;margin:0 auto 20px;width:min(100%,360px);aspect-ratio:4/3;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:24px;background:linear-gradient(145deg,#fff0f6,#eef8ff);box-shadow:0 12px 28px #54406d18;position:relative';
  const photoMap={
  'apple':'photo-1560806887-1e4cd0b6cbd6','red apple':'photo-1560806887-1e4cd0b6cbd6','green apple':'photo-1560806887-1e4cd0b6cbd6',
  'dog':'photo-1552053831-71594a27632d','cat':'photo-1514888286974-6c03e2ca1dba','fish':'photo-1524704654690-b56c05c78a00',
@@ -234,7 +250,7 @@ function renderTeaching(){
  };
  const imageKey=(current==='alphabet'?item[2]:current==='numbers100'?'apple':item[1]).toLowerCase();
  const photoId=current==='numbers100'?null:photoMap[imageKey];
- if(photoId){const img=document.createElement('img');img.src='https://images.unsplash.com/'+photoId+'?auto=format&fit=crop&w=700&q=80';img.alt=current==='alphabet'?(item[2]+' photo'):current==='numbers100'?'Apples for counting':item[1];img.loading='lazy';img.style.cssText='width:100%;height:210px;object-fit:cover;display:block';img.onerror=()=>{visual.innerHTML='';visual.textContent=item[1];visual.style.background='#fff';visual.style.fontSize='clamp(4rem,13vw,7rem)'};visual.appendChild(img)}else{visual.textContent=item[1];visual.style.background='linear-gradient(145deg,#fff0f6,#eef8ff)'}
+ if(photoId){const img=document.createElement('img');img.src='https://images.unsplash.com/'+photoId+'?auto=format&fit=crop&w=700&q=80';img.alt=current==='alphabet'?(item[2]+' photo'):current==='numbers100'?'Apples for counting':item[1];img.loading='lazy';img.style.cssText='width:100%;height:100%;min-height:100%;object-fit:cover;object-position:center;display:block;border-radius:inherit;flex:1 1 auto';img.onerror=()=>{visual.innerHTML='';visual.textContent=item[1];visual.style.background='linear-gradient(145deg,#fff0f6,#eef8ff)';visual.style.fontSize='clamp(4rem,13vw,7rem)'};visual.appendChild(img)}else{visual.textContent=item[1];visual.style.background='linear-gradient(145deg,#fff0f6,#eef8ff)'}
  const main=document.createElement('div');main.textContent=current==='alphabet'?item[0]:current==='numbers100'?item[0]:item[1];main.style.cssText='font-size:clamp(3rem,10vw,5.5rem);font-weight:1000;line-height:1.1;color:#6750a4;letter-spacing:-.04em';
  const word=document.createElement('div');word.textContent=current==='alphabet'?item[2]:current==='numbers100'?item[2]:item[1];word.style.cssText='font-size:clamp(1.5rem,5vw,2.1rem);font-weight:900;margin-top:12px;color:#302747';
  const detail=document.createElement('p');detail.textContent=current==='alphabet'?(item[0]+' is for '+item[2]+'.'):current==='numbers100'?'This is number '+item[0]+'. Let’s say '+item[2]+'.':item[2]||('This is a '+item[1]+'.');detail.style.cssText='font-size:1.05rem;color:#716981;margin:10px auto 0;max-width:320px;line-height:1.5';
